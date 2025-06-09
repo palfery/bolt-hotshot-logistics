@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\2-Application\HotshotLogistics.Core\HotshotLogistics.Core.csproj" />
+    <ProjectReference Include="..\..\3-Domain\HotshotLogistics.Domain\HotshotLogistics.Domain.csproj" />
   </ItemGroup>
 
 </Project>

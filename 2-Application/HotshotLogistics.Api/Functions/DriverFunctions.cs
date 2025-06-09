@@ -1,5 +1,5 @@
 using System.Net;
-using HotshotLogistics.Core.Models;
+using HotshotLogistics.Domain.Models;
 using HotshotLogistics.Data;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;

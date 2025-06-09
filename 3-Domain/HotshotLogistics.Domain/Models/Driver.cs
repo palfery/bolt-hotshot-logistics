@@ -1,4 +1,4 @@
-namespace HotshotLogistics.Core.Models;
+namespace HotshotLogistics.Domain.Models;
 
 public class Driver
 {
