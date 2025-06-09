@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore dotnet dependencies
+        run: dotnet restore 5-Test/tests/HotshotLogistics.Tests/HotshotLogistics.Tests.csproj
+
+      - name: Run dotnet tests
+        run: dotnet test 5-Test/tests/HotshotLogistics.Tests/HotshotLogistics.Tests.csproj --no-restore --verbosity normal
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install dependencies (Expo app)
+        working-directory: 1-Presentation
+        run: npm install
+
+      - name: Lint Expo app
+        working-directory: 1-Presentation
+        run: npm run lint
+
+      - name: Install dependencies (Admin dashboard)
+        working-directory: 1-Presentation/admin-dashboard
+        run: npm install
+
+      - name: Lint Admin dashboard
+        working-directory: 1-Presentation/admin-dashboard
+        run: npm run lint
+
+      - name: Type check Admin dashboard
+        working-directory: 1-Presentation/admin-dashboard
+        run: npm run type-check
