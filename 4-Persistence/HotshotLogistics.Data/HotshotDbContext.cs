@@ -1,4 +1,4 @@
-using HotshotLogistics.Core.Models;
+using HotshotLogistics.Domain.Models;
 using HotshotLogistics.Data.Configurations;
 using Microsoft.EntityFrameworkCore;
 
