@@ -1,27 +1,27 @@
 using System.Net;
 using HotshotLogistics.Domain.Models;
-using HotshotLogistics.Data;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
-using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
+using HotshotLogistics.Contracts.Services;
+using HotshotLogistics.Contracts.Models;
 
 namespace HotshotLogistics.Api.Functions;
 
 public class DriverFunctions
 {
-    private readonly HotshotDbContext _dbContext;
+    private readonly IDriverService _driverService;
 
-    public DriverFunctions(HotshotDbContext dbContext)
+    public DriverFunctions(IDriverService driverService)
     {
-        _dbContext = dbContext;
+        _driverService = driverService;
     }
 
     [Function("GetDrivers")]
     public async Task<HttpResponseData> GetDrivers(
         [HttpTrigger(AuthorizationLevel.Function, "get", Route = "drivers")] HttpRequestData req)
     {
-        var drivers = await _dbContext.Drivers.ToListAsync();
+        var drivers = await _driverService.GetDriversAsync();
         var response = req.CreateResponse(HttpStatusCode.OK);
         await response.WriteAsJsonAsync(drivers);
         return response;
@@ -32,7 +32,7 @@ public class DriverFunctions
         [HttpTrigger(AuthorizationLevel.Function, "get", Route = "drivers/{id}")] HttpRequestData req,
         int id)
     {
-        var driver = await _dbContext.Drivers.FindAsync(id);
+        var driver = await _driverService.GetDriverByIdAsync(id);
         if (driver == null)
         {
             var notFoundResponse = req.CreateResponse(HttpStatusCode.NotFound);
@@ -49,7 +49,7 @@ public class DriverFunctions
     public async Task<HttpResponseData> CreateDriver(
         [HttpTrigger(AuthorizationLevel.Function, "post", Route = "drivers")] HttpRequestData req)
     {
-        var driver = await JsonSerializer.DeserializeAsync<Driver>(req.Body);
+        IDriver driver = await JsonSerializer.DeserializeAsync<IDriver>(req.Body);
         if (driver == null)
         {
             var badRequestResponse = req.CreateResponse(HttpStatusCode.BadRequest);
@@ -57,12 +57,9 @@ public class DriverFunctions
             return badRequestResponse;
         }
 
-        driver.CreatedAt = DateTime.UtcNow;
-        await _dbContext.Drivers.AddAsync(driver);
-        await _dbContext.SaveChangesAsync();
-
+        var createdDriver = await _driverService.CreateDriverAsync(driver);
         var response = req.CreateResponse(HttpStatusCode.Created);
-        await response.WriteAsJsonAsync(driver);
+        await response.WriteAsJsonAsync(createdDriver);
         return response;
     }
-} 
+}

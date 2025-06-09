@@ -10,6 +10,6 @@ public class Driver
     public string LicenseNumber { get; set; } = string.Empty;
     public DateTime LicenseExpiryDate { get; set; }
     public bool IsActive { get; set; }
-    public DateTime CreatedAt { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime? UpdatedAt { get; set; }
 } 
