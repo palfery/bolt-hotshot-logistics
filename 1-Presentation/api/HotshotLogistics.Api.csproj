@@ -23,8 +23,8 @@
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\HotshotLogistics.Core\HotshotLogistics.Core.csproj" />
-    <ProjectReference Include="..\HotshotLogistics.Infrastructure\HotshotLogistics.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\2-Application\HotshotLogistics.Core.csproj" />
+    <ProjectReference Include="..\..\4-Persistence\HotshotLogistics.Infrastructure.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="host.json">

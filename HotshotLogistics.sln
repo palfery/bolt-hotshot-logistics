@@ -5,13 +5,13 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{827E0CD3-B72D-47B6-A68D-7590B98EB39B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotshotLogistics.Core", "src\HotshotLogistics.Core\HotshotLogistics.Core.csproj", "{29A80FAE-B81D-4668-A107-DB8BDAF62D32}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotshotLogistics.Core", "2-Application\HotshotLogistics.Core.csproj", "{29A80FAE-B81D-4668-A107-DB8BDAF62D32}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotshotLogistics.Infrastructure", "src\HotshotLogistics.Infrastructure\HotshotLogistics.Infrastructure.csproj", "{205A5F3C-5476-40F4-9226-146512C2880C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotshotLogistics.Infrastructure", "4-Persistence\HotshotLogistics.Infrastructure.csproj", "{205A5F3C-5476-40F4-9226-146512C2880C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotshotLogistics.Tests", "tests\HotshotLogistics.Tests\HotshotLogistics.Tests.csproj", "{A5E1454A-6799-44A0-B672-F7398EFF431C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotshotLogistics.Tests", "5-Test\tests\HotshotLogistics.Tests\HotshotLogistics.Tests.csproj", "{A5E1454A-6799-44A0-B672-F7398EFF431C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotshotLogistics.Api", "src\HotshotLogistics.Api\HotshotLogistics.Api.csproj", "{2F4459A9-157D-4C80-8A2F-F2050F117AA9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotshotLogistics.Api", "1-Presentation\api\HotshotLogistics.Api.csproj", "{2F4459A9-157D-4C80-8A2F-F2050F117AA9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
