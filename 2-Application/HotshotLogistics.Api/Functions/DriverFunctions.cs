@@ -1,6 +1,6 @@
 using System.Net;
 using HotshotLogistics.Core.Models;
-using HotshotLogistics.Infrastructure.Data;
+using HotshotLogistics.Data;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.EntityFrameworkCore;
