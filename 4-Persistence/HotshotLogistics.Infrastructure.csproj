@@ -17,4 +17,4 @@
   <ItemGroup>
     <ProjectReference Include="..\2-Application\HotshotLogistics.Core.csproj" />
   </ItemGroup>
-</Project> 
+</Project>
