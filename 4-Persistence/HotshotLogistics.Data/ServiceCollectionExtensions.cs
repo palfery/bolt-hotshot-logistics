@@ -1,34 +1,41 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting; // Added for IHostEnvironment
 using System;
+using HotshotLogistics.Data.Repositories;
+using HotshotLogistics.Contracts.Repositories;
 
 namespace HotshotLogistics.Data
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddHotshotDbContext(this IServiceCollection services, IConfiguration configuration, IHostEnvironment hostEnvironment)
+        public static IServiceCollection AddHotshotDbContext(this IServiceCollection services, IConfiguration configuration)
         {
-            string connectionString = "";
-            string dbUser = null;
-            string dbPassword = null;
+            var connectionString = configuration.GetConnectionString("DefaultConnection");
 
-            // Directly try to get from environment variables, assuming Program.cs has set them
-            // from local.settings.json when ASPNETCORE_ENVIRONMENT is Development.
-            dbUser = Environment.GetEnvironmentVariable("HSL_DBUser");
-            dbPassword = Environment.GetEnvironmentVariable("HSL_DBPassword");
-
-            if (string.IsNullOrEmpty(dbUser) || string.IsNullOrEmpty(dbPassword))
+            if (string.IsNullOrEmpty(connectionString))
             {
-                throw new InvalidOperationException("HSL_DBUser or HSL_DBPassword not configured in configuration or environment variables");
+                var dbUser = Environment.GetEnvironmentVariable("HSL_DBUser");
+                var dbPassword = Environment.GetEnvironmentVariable("HSL_DBPassword");
+
+                if (string.IsNullOrEmpty(dbUser) || string.IsNullOrEmpty(dbPassword))
+                {
+                    throw new InvalidOperationException("Database connection configuration is missing. Provide ConnectionStrings:DefaultConnection or HSL_DBUser/HSL_DBPassword variables.");
+                }
+
+                connectionString = $"Server=localhost;Database=hotshot_logistics;User={dbUser};Password={dbPassword};Port=3306;SslMode=None;";
             }
 
-            connectionString = $"Server=localhost;Database=HotshotLogistics;User={dbUser};Password={dbPassword};Port=3306;SslMode=None;";
             var serverVersion = ServerVersion.AutoDetect(connectionString);
             services.AddDbContext<HotshotDbContext>(options =>
                 options.UseMySql(connectionString, serverVersion));
 
+            return services;
+        }
+
+        public static IServiceCollection AddHotshotRepositories(this IServiceCollection services)
+        {
+            services.AddScoped<IDriverRepository, DriverRepository>();
             return services;
         }
     }
