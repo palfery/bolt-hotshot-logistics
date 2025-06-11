@@ -151,49 +151,82 @@ export interface Job {
   lastUpdatedBy: string;
 }
 
-// Legacy interface for backward compatibility with existing mobile app
-export interface LegacyJob {
-  id: string;
+export interface CreateJobRequest {
   title: string;
-  pickupAddress: string;
-  deliveryAddress: string;
-  pickupCity: string;
-  deliveryCity: string;
-  distance: number; // in miles
-  rate: number; // payment amount
-  priority: 'low' | 'medium' | 'high' | 'urgent';
-  cargoType: string;
-  weight: number; // in lbs
-  pickupTime: string;
-  deliveryTime: string;
-  status: 'available' | 'assigned' | 'in_progress' | 'completed' | 'cancelled';
-  customerName: string;
-  customerPhone: string;
+  description?: string;
+  customerId: string;
+  pickupLocation: Omit<Location, 'latitude' | 'longitude'>;
+  deliveryLocation: Omit<Location, 'latitude' | 'longitude'>;
+  pickupContactName?: string;
+  pickupContactPhone?: string;
+  pickupInstructions?: string;
+  pickupTimeWindow: {
+    earliest: string; // ISO date string
+    latest: string;
+  };
+  deliveryContactName?: string;
+  deliveryContactPhone?: string;
+  deliveryInstructions?: string;
+  deliveryTimeWindow: {
+    earliest: string;
+    latest: string;
+  };
+  cargoType: CargoType;
+  cargoDescription: string;
+  weight: number;
+  dimensions?: JobDimensions;
+  quantity: number;
+  value?: number;
+  requirements: JobRequirements;
+  priority: JobPriority;
+  baseRate: number;
   specialInstructions?: string;
-  createdAt: string;
 }
 
-export interface Driver {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-  rating: number;
-  totalJobs: number;
-  totalEarnings: number;
-  vehicleType: string;
-  licenseNumber: string;
-  profileImage?: string;
+export interface UpdateJobRequest {
+  title?: string;
+  description?: string;
+  pickupInstructions?: string;
+  deliveryInstructions?: string;
+  cargoDescription?: string;
+  weight?: number;
+  dimensions?: JobDimensions;
+  quantity?: number;
+  value?: number;
+  requirements?: JobRequirements;
+  priority?: JobPriority;
+  baseRate?: number;
+  specialInstructions?: string;
+  internalNotes?: string;
 }
 
 export interface JobSearchFilters {
   status?: JobStatus[];
   priority?: JobPriority[];
   cargoType?: CargoType[];
-  maxDistance?: number;
+  customerId?: string;
+  driverId?: string;
+  pickupCity?: string;
+  deliveryCity?: string;
+  dateRange?: {
+    start: Date;
+    end: Date;
+  };
   minRate?: number;
   maxRate?: number;
+  maxDistance?: number;
   requiresSpecialEquipment?: boolean;
+}
+
+export interface JobAssignment {
+  jobId: string;
+  driverId: string;
+  vehicleId?: string;
+  assignedAt: Date;
+  assignedBy: string;
+  estimatedPickupTime?: Date;
+  estimatedDeliveryTime?: Date;
+  notes?: string;
 }
 
 export interface JobMetrics {
@@ -207,51 +240,11 @@ export interface JobMetrics {
   averageJobValue: number;
 }
 
-// Helper functions to convert between legacy and new job formats
-export function convertToLegacyJob(job: Job): LegacyJob {
-  return {
-    id: job.id,
-    title: job.title,
-    pickupAddress: job.pickupLocation.address,
-    deliveryAddress: job.deliveryLocation.address,
-    pickupCity: job.pickupLocation.city,
-    deliveryCity: job.deliveryLocation.city,
-    distance: job.distance,
-    rate: job.pricing.totalRate,
-    priority: job.priority === 'emergency' ? 'urgent' : job.priority,
-    cargoType: job.cargoType,
-    weight: job.weight,
-    pickupTime: job.pickupTimeWindow.earliest.toISOString(),
-    deliveryTime: job.deliveryTimeWindow.latest.toISOString(),
-    status: convertJobStatus(job.tracking.currentStatus),
-    customerName: job.customerName,
-    customerPhone: job.customerPhone,
-    specialInstructions: job.specialInstructions,
-    createdAt: job.createdAt.toISOString()
-  };
-}
-
-function convertJobStatus(status: JobStatus): LegacyJob['status'] {
-  switch (status) {
-    case 'available':
-    case 'draft':
-      return 'available';
-    case 'assigned':
-    case 'accepted':
-      return 'assigned';
-    case 'en_route_pickup':
-    case 'arrived_pickup':
-    case 'pickup_complete':
-    case 'en_route_delivery':
-    case 'arrived_delivery':
-      return 'in_progress';
-    case 'delivered':
-    case 'completed':
-      return 'completed';
-    case 'cancelled':
-    case 'failed':
-      return 'cancelled';
-    default:
-      return 'available';
-  }
+export interface JobRoute {
+  jobId: string;
+  waypoints: Location[];
+  totalDistance: number; // miles
+  estimatedDuration: number; // minutes
+  optimized: boolean;
+  createdAt: Date;
 }
