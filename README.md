@@ -33,6 +33,7 @@ root/
 │
 ├─ 1-Presentation/
 │   ├─ admin-dashboard/        # React/Next.js Admin Dashboard
+│   ├─ HotshotLogistics.mobile/# Expo React Native Driver App
 │   ├─ components/             # Shared React Native components
 │   ├─ hooks/                  # Shared hooks
 │   ├─ types/                  # Shared TS types for jobs/drivers
@@ -48,6 +49,8 @@ root/
 │
 ├─ 5-Test/
 │   └─ tests/HotshotLogistics.Tests/     # xUnit tests for backend
+│
+├─ backend/                    # Node.js Backend API
 │
 ├─ .gitignore, README.md, etc.
 ```
@@ -79,7 +82,7 @@ npm run dev
 ### 2. Driver App (Expo React Native)
 
 ```bash
-cd 1-Presentation
+cd 1-Presentation/HotshotLogistics.mobile
 npm install
 npm run dev
 ```
@@ -87,10 +90,22 @@ npm run dev
 
 ---
 
-### 3. Backend API (Azure Functions, .NET)
+### 3. Backend API (Node.js)
 
 ```bash
-cd 1-Presentation/api
+cd backend
+npm install
+npm run dev
+```
+- Configure your connection string in `.env` file.
+- API runs locally on port 3000 by default.
+
+---
+
+### 4. .NET Backend API (Azure Functions)
+
+```bash
+cd 1-Presentation/HotshotLogistics.Api
 dotnet build
 dotnet run
 ```
@@ -99,7 +114,7 @@ dotnet run
 
 ---
 
-### 4. Database Setup
+### 5. Database Setup
 
 - Update `DefaultConnection` in your config to point to your MySQL instance.
 - Apply EF Core migrations (coming soon).
@@ -114,7 +129,7 @@ dotnet run
 
 ---
 
-### 5. Running Tests
+### 6. Running Tests
 
 ```bash
 cd 5-Test/tests/HotshotLogistics.Tests
