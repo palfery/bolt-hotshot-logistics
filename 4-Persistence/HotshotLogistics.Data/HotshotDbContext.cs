@@ -11,7 +11,7 @@ public class HotshotDbContext : DbContext
     {
     }
 
-    public DbSet<IDriver> Drivers { get; set; }
+    public DbSet<Driver> Drivers { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
