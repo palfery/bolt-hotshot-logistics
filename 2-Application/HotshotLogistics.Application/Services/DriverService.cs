@@ -1,6 +1,6 @@
 using HotshotLogistics.Contracts.Models;
 using HotshotLogistics.Contracts.Services;
-using HotshotLogistics.Data.Repositories;
+using HotshotLogistics.Contracts.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
