@@ -1,6 +1,6 @@
 using HotshotLogistics.Contracts.Models;
 
-namespace HotshotLogistics.Data.Repositories
+namespace HotshotLogistics.Contracts.Repositories
 {
     public interface IDriverRepository
     {

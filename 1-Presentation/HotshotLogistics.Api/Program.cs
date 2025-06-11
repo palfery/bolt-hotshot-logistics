@@ -2,6 +2,7 @@ using Azure.Identity;
 using HotshotLogistics.Application.Services;
 using HotshotLogistics.Contracts.Services;
 using HotshotLogistics.Data;
+using HotshotLogistics.Data.Repositories;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -67,8 +68,9 @@ var host = new HostBuilder()
         // Register Azure App Configuration refresh service
         _ = services.AddAzureAppConfiguration();
 
-        // Register DbContext
-        _ = services.AddHotshotDbContext(context.Configuration, context.HostingEnvironment);
+        // Register DbContext and repositories
+        _ = services.AddHotshotDbContext(context.Configuration);
+        _ = services.AddHotshotRepositories();
 
         // Register application services
         _ = services.AddScoped<IDriverService, DriverService>();
