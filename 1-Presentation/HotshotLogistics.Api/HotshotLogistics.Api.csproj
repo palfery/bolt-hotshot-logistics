@@ -4,6 +4,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <AzureFunctionsVersion>v4</AzureFunctionsVersion>
+    <OutputType>Exe</OutputType>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Azure.AppConfiguration.AspNetCore" Version="8.2.0" />
@@ -32,4 +33,5 @@
     <ProjectReference Include="..\..\0-Base\HotshotLogistics.Core\HotshotLogistics.Core.csproj" />
     <ProjectReference Include="..\..\4-Persistence\HotshotLogistics.Infrastructure\HotshotLogistics.Infrastructure.csproj" />
   </ItemGroup>
+  
 </Project>
