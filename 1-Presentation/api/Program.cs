@@ -1,5 +1,7 @@
 using Azure.Identity;
 using HotshotLogistics.Infrastructure.Data;
+using HotshotLogistics.Core.Interfaces;
+using HotshotLogistics.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -33,7 +35,8 @@ var host = new HostBuilder()
         services.AddDbContext<HotshotDbContext>(options =>
             options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
-        // Add other services here
+        // Register repositories
+        services.AddScoped<IJobTypeRepository, JobTypeRepository>();
     })
     .Build();
 

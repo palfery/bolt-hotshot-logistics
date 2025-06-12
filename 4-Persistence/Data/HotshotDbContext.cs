@@ -10,6 +10,7 @@ public class HotshotDbContext : DbContext
     }
 
     public DbSet<Driver> Drivers { get; set; }
+    public DbSet<JobType> JobTypes { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -26,5 +27,11 @@ public class HotshotDbContext : DbContext
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
             entity.Property(e => e.UpdatedAt).ValueGeneratedOnUpdate();
         });
+
+        modelBuilder.Entity<JobType>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Name).IsRequired().HasMaxLength(100);
+        });
     }
-} 
+}
