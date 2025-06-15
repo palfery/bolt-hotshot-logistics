@@ -1,6 +1,6 @@
 using HotshotLogistics.Contracts.Models;
 using HotshotLogistics.Contracts.Services;
-using HotshotLogistics.Data.Repositories;
+using HotshotLogistics.Contracts.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -13,7 +13,7 @@ namespace HotshotLogistics.Application.Services
 
         public DriverService(IDriverRepository driverRepo)
         {
-            _driverRepo = driverRepo;   
+            _driverRepo = driverRepo;
         }
         public Task<IDriver> CreateDriverAsync(IDriver driver)
         {

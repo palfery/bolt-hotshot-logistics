@@ -1,22 +1,44 @@
-using HotshotLogistics.Domain.Models;
-using HotshotLogistics.Data.Configurations;
-using Microsoft.EntityFrameworkCore;
-using HotshotLogistics.Contracts.Models;
+// <copyright file="HotshotDbContext.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
-namespace HotshotLogistics.Data;
-
-public class HotshotDbContext : DbContext
+namespace HotshotLogistics.Data
 {
-    public HotshotDbContext(DbContextOptions<HotshotDbContext> options) : base(options)
+    using HotshotLogistics.Contracts.Models;
+    using HotshotLogistics.Data.Configurations;
+    using HotshotLogistics.Domain.Models;
+    using Microsoft.EntityFrameworkCore;
+
+    /// <summary>
+    /// Database context for the Hotshot Logistics application.
+    /// </summary>
+    public class HotshotDbContext : DbContext
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HotshotDbContext"/> class.
+        /// </summary>
+        /// <param name="options">The options for this context.</param>
+        public HotshotDbContext(DbContextOptions<HotshotDbContext> options)
+            : base(options)
+        {
+        }
+
+        /// <summary>
+        /// Gets or sets the drivers in the system.
+        /// </summary>
+        public DbSet<Driver> Drivers { get; set; }
+
+        /// <summary>
+        /// Gets or sets the jobs in the system.
+        /// </summary>
+        public DbSet<Job> Jobs { get; set; }
+
+        /// <inheritdoc/>
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.ApplyConfiguration(new DriverConfiguration());
+            modelBuilder.ApplyConfiguration(new JobConfiguration());
+            base.OnModelCreating(modelBuilder);
+        }
     }
-
-    public DbSet<IDriver> Drivers { get; set; }
-
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        base.OnModelCreating(modelBuilder);
-
-        modelBuilder.ApplyConfiguration(new DriverConfiguration());
-    }
-} 
+}

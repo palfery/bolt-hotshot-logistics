@@ -1,18 +1,80 @@
+using Azure.Identity;
 using HotshotLogistics.Application.Services;
 using HotshotLogistics.Contracts.Services;
 using HotshotLogistics.Data;
+using HotshotLogistics.Data.Repositories;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.IO; // For File
+using System.Text.Json; // For JsonDocument
+using System.Reflection;
 
 var host = new HostBuilder()
-     .ConfigureServices(services =>
+    .ConfigureAppConfiguration((hostingContext, config) =>
     {
-        // Register DbContext
-        //call hotshotlogistics.data AddHotshotDbContext extension method to register the DbContext 
-        services.AddHotshotDbContext();
+        var env = hostingContext.HostingEnvironment;
+        config.AddEnvironmentVariables();
+
+        // Use local.settings.json for local development
+        if (env.IsDevelopment())
+        {
+            config.AddJsonFile("local.settings.json", optional: true, reloadOnChange: true);
+
+            // Explicitly load Values from local.settings.json and add as environment variables
+            var assemblyLocation = System.Reflection.Assembly.GetExecutingAssembly().Location;
+            var assemblyDirectory = Path.GetDirectoryName(assemblyLocation);
+            var localSettingsPath = assemblyDirectory != null ? Path.Combine(assemblyDirectory, "local.settings.json") : string.Empty;
+            if (File.Exists(localSettingsPath))
+            {
+                using var stream = File.OpenRead(localSettingsPath);
+                using var doc = JsonDocument.Parse(stream);
+                if (doc.RootElement.TryGetProperty("Values", out var values))
+                {
+                    foreach (var prop in values.EnumerateObject())
+                    {
+                        var key = prop.Name;
+                        var value = prop.Value.GetString();
+                        if (!string.IsNullOrEmpty(key) && value != null)
+                        {
+                            Environment.SetEnvironmentVariable(key, value);
+                        }
+                    }
+                }
+            }
+        }
+
+        var settings = config.Build();
+
+        // Get Azure App Configuration endpoint from environment or local.settings.json
+        var appConfigEndpoint = settings["AppConfig:Endpoint"];
+        if (!string.IsNullOrEmpty(appConfigEndpoint))
+        {
+            _ = config.AddAzureAppConfiguration(options =>
+            {
+                _ = options.Connect(new Uri(appConfigEndpoint), new DefaultAzureCredential())
+                       // Sentinel key for refresh
+                       .ConfigureRefresh(refresh =>
+                       {
+                           _ = refresh.Register("Sentinel", refreshAll: true)
+                                  .SetRefreshInterval(TimeSpan.FromSeconds(30));
+                       })
+                       .Select("*");
+            });
+        }
+    })
+    .ConfigureServices((context, services) =>
+    {
+        // Register Azure App Configuration refresh service
+        _ = services.AddAzureAppConfiguration();
+
+        // Register DbContext and repositories
+        _ = services.AddHotshotDbContext(context.Configuration);
+        _ = services.AddHotshotRepositories();
 
         // Register application services
-        services.AddScoped<IDriverService, DriverService>();
+        _ = services.AddScoped<IDriverService, DriverService>();
+
     })
     .Build();
 
