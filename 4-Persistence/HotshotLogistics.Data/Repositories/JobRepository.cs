@@ -16,7 +16,7 @@ namespace HotshotLogistics.Data.Repositories
     /// <summary>
     /// Repository for managing Job entities.
     /// </summary>
-    public class JobRepository : IJobRepository
+    internal class JobRepository : IJobRepository
     {
         private readonly HotshotDbContext dbContext;
 

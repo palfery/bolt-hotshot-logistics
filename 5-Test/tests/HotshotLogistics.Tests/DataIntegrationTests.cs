@@ -15,12 +15,11 @@ public class DataIntegrationTests
     private HotshotDbContext CreateContext()
     {
         var options = new DbContextOptionsBuilder<HotshotDbContext>()
-            .UseMySql(
-                "server=localhost;port=3307;database=hotshot_logistics;user=hotshot_user;password=hotshot_password",
-                ServerVersion.AutoDetect("server=localhost;port=3307;database=hotshot_logistics;user=hotshot_user;password=hotshot_password")
-            )
+            .UseInMemoryDatabase(Guid.NewGuid().ToString())
             .Options;
-        return new HotshotDbContext(options);
+        var context = new HotshotDbContext(options);
+        context.Database.EnsureCreated();
+        return context;
     }
 
     [Fact]
