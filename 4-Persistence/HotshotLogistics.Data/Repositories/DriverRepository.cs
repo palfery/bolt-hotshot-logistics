@@ -15,7 +15,7 @@ namespace HotshotLogistics.Data.Repositories
     /// <summary>
     /// Repository for managing Driver entities.
     /// </summary>
-    public class DriverRepository : IDriverRepository
+    internal class DriverRepository : IDriverRepository
     {
         private readonly HotshotDbContext context;
 
