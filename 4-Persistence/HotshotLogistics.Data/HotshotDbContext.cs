@@ -12,11 +12,13 @@ public class HotshotDbContext : DbContext
     }
 
     public DbSet<Driver> Drivers { get; set; }
+    public DbSet<Job> Jobs { get; set; } // New DbSet for Jobs
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.ApplyConfiguration(new DriverConfiguration());
+        modelBuilder.ApplyConfiguration(new JobConfiguration()); // Apply Job configuration
     }
 } 
