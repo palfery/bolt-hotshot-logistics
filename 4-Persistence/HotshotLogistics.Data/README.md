@@ -16,6 +16,6 @@ dotnet build
 ## Tests
 
 ```bash
-dotnet test ../..//5-Test/tests/HotshotLogistics.Tests/HotshotLogistics.Tests.csproj
+dotnet test ../../5-Test/tests/HotshotLogistics.Tests/HotshotLogistics.Tests.csproj
 ```
 
