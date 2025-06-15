@@ -1,134 +1,149 @@
-using HotshotLogistics.Contracts.Models;
-using HotshotLogistics.Contracts.Repositories;
-using HotshotLogistics.Domain.Models; // Actual domain model
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+// <copyright file="JobRepository.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
-namespace HotshotLogistics.Data.Repositories;
-
-public class JobRepository : IJobRepository
+namespace HotshotLogistics.Data.Repositories
 {
-    private readonly HotshotDbContext _context;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using HotshotLogistics.Contracts.Models;
+    using HotshotLogistics.Contracts.Repositories;
+    using HotshotLogistics.Domain.Models;
+    using Microsoft.EntityFrameworkCore;
 
-    public JobRepository(HotshotDbContext context)
+    /// <summary>
+    /// Repository for managing Job entities.
+    /// </summary>
+    public class JobRepository : IJobRepository
     {
-        _context = context;
-    }
+        private readonly HotshotDbContext dbContext;
 
-    public async Task<IJob> CreateJobAsync(IJob jobDto)
-    {
-        var job = new Job // Map from IJob DTO to Domain.Model.Job
+        /// <summary>
+        /// Initializes a new instance of the <see cref="JobRepository"/> class.
+        /// </summary>
+        /// <param name="dbContext">The database context.</param>
+        public JobRepository(HotshotDbContext dbContext)
         {
-            Id = string.IsNullOrEmpty(jobDto.Id) ? Guid.NewGuid().ToString() : jobDto.Id,
-            Title = jobDto.Title,
-            PickupAddress = jobDto.PickupAddress,
-            DropoffAddress = jobDto.DropoffAddress,
-            Status = jobDto.Status,
-            Priority = jobDto.Priority,
-            Amount = jobDto.Amount,
-            EstimatedDeliveryTime = jobDto.EstimatedDeliveryTime,
-            AssignedDriverId = jobDto.AssignedDriverId,
-            CreatedAt = DateTime.UtcNow // Ensure CreatedAt is set
-        };
-
-        _context.Jobs.Add(job);
-        await _context.SaveChangesAsync();
-        // Map back to IJob or return the domain object if the service layer handles mapping
-        // For simplicity, returning the domain object cast to IJob (if compatible, or map explicitly)
-        // It's often better to have explicit mapping if IJob and Job diverge significantly.
-        // Here, we assume Job implements IJob or has compatible properties.
-        // Let's create a new DTO to return to ensure we return IJob.
-        return MapToIJob(job);
-    }
-
-    public async Task<IJob?> GetJobByIdAsync(string id)
-    {
-        var job = await _context.Jobs
-                                .AsNoTracking()
-                                .FirstOrDefaultAsync(j => j.Id == id);
-        return job != null ? MapToIJob(job) : null;
-    }
-
-    public async Task<IEnumerable<IJob>> GetJobsAsync()
-    {
-        var jobs = await _context.Jobs
-                                 .AsNoTracking()
-                                 .ToListAsync();
-        return jobs.Select(MapToIJob);
-    }
-
-    public async Task<IJob?> UpdateJobAsync(string id, IJob jobDetails)
-    {
-        var job = await _context.Jobs.FindAsync(id);
-        if (job == null)
-        {
-            return null;
+            this.dbContext = dbContext;
         }
 
-        job.Title = jobDetails.Title;
-        job.PickupAddress = jobDetails.PickupAddress;
-        job.DropoffAddress = jobDetails.DropoffAddress;
-        job.Status = jobDetails.Status;
-        job.Priority = jobDetails.Priority;
-        job.Amount = jobDetails.Amount;
-        job.EstimatedDeliveryTime = jobDetails.EstimatedDeliveryTime;
-        job.AssignedDriverId = jobDetails.AssignedDriverId;
-        job.UpdatedAt = DateTime.UtcNow;
-
-        _context.Jobs.Update(job);
-        await _context.SaveChangesAsync();
-        return MapToIJob(job);
-    }
-
-    public async Task<bool> DeleteJobAsync(string id)
-    {
-        var job = await _context.Jobs.FindAsync(id);
-        if (job == null)
+        /// <inheritdoc/>
+        public async Task<IEnumerable<Job>> GetAllAsync()
         {
-            return false;
+            return await this.dbContext.Jobs
+                .Include(j => j.AssignedDriver)
+                .ToListAsync();
         }
 
-        _context.Jobs.Remove(job);
-        await _context.SaveChangesAsync();
-        return true;
-    }
-
-    // Helper for mapping. Consider using a library like AutoMapper for complex scenarios.
-    private static IJob MapToIJob(Job job)
-    {
-        // This is a simple manual mapping.
-        // If IJob is an interface that Job implements, you can cast.
-        // Otherwise, you need to create a DTO instance.
-        // For this example, let's assume we need to create a DTO that implements IJob.
-        // If you create a concrete DTO class (e.g., JobDto : IJob), instantiate that.
-        // For now, we'll use the domain model directly if it's compatible or map to a new object.
-        // Let's create a simple DTO class for this purpose or use an anonymous type if IJob allows.
-        // To keep it clean, let's assume Job itself can be returned if IJob is simple enough.
-        // However, the request implies IJob is a contract, so we should map.
-        // We'll need a concrete class that implements IJob for the return types.
-        // Let's define a simple one here for demonstration or assume one exists.
-
-        // Option 1: If Job implements IJob (add ' : IJob' to Job class definition)
-        // return job;
-
-        // Option 2: Manual mapping to a new object (if IJob is just an interface)
-        // This requires a concrete class that implements IJob.
-        // Let's define a simple concrete DTO for this.
-        return new HotshotLogistics.Contracts.Models.JobDto // Assuming JobDto : IJob exists
+        /// <inheritdoc/>
+        public async Task<Job> GetByIdAsync(string id)
         {
-            Id = job.Id,
-            Title = job.Title,
-            PickupAddress = job.PickupAddress,
-            DropoffAddress = job.DropoffAddress,
-            Status = job.Status,
-            Priority = job.Priority,
-            Amount = job.Amount,
-            EstimatedDeliveryTime = job.EstimatedDeliveryTime,
-            AssignedDriverId = job.AssignedDriverId,
-            CreatedAt = job.CreatedAt,
-            UpdatedAt = job.UpdatedAt
-        };
+            return await this.dbContext.Jobs
+                .Include(j => j.AssignedDriver)
+                .FirstOrDefaultAsync(j => j.Id == id);
+        }
+
+        /// <inheritdoc/>
+        public async Task<Job> AddAsync(Job job)
+        {
+            await this.dbContext.Jobs.AddAsync(job);
+            await this.dbContext.SaveChangesAsync();
+            return job;
+        }
+
+        /// <inheritdoc/>
+        public async Task<Job> UpdateAsync(Job job)
+        {
+            this.dbContext.Jobs.Update(job);
+            await this.dbContext.SaveChangesAsync();
+            return job;
+        }
+
+        /// <inheritdoc/>
+        public async Task DeleteAsync(string id)
+        {
+            var job = await this.dbContext.Jobs.FindAsync(id);
+            if (job != null)
+            {
+                this.dbContext.Jobs.Remove(job);
+                await this.dbContext.SaveChangesAsync();
+            }
+        }
+
+        /// <inheritdoc/>
+        public async Task<IJob> CreateJobAsync(IJob jobDto)
+        {
+            var job = new Job
+            {
+                Id = string.IsNullOrEmpty(jobDto.Id) ? Guid.NewGuid().ToString() : jobDto.Id,
+                Title = jobDto.Title,
+                PickupAddress = jobDto.PickupAddress,
+                DropoffAddress = jobDto.DropoffAddress,
+                Status = jobDto.Status,
+                Priority = jobDto.Priority,
+                Amount = jobDto.Amount,
+                EstimatedDeliveryTime = jobDto.EstimatedDeliveryTime,
+                AssignedDriverId = jobDto.AssignedDriverId,
+                CreatedAt = DateTime.UtcNow,
+            };
+
+            this.dbContext.Jobs.Add(job);
+            await this.dbContext.SaveChangesAsync();
+            return (IJob)job;
+        }
+
+        public async Task<IJob?> GetJobByIdAsync(string id)
+        {
+            var job = await this.dbContext.Jobs
+                                     .AsNoTracking()
+                                     .FirstOrDefaultAsync(j => j.Id == id);
+            return job as IJob;
+        }
+
+        public async Task<IEnumerable<IJob>> GetJobsAsync()
+        {
+            var jobs = await this.dbContext.Jobs
+                                      .AsNoTracking()
+                                      .ToListAsync();
+            return jobs.Cast<IJob>();
+        }
+
+        public async Task<IJob?> UpdateJobAsync(string id, IJob jobDetails)
+        {
+            var job = await this.dbContext.Jobs.FindAsync(id);
+            if (job == null)
+            {
+                return null;
+            }
+
+            job.Title = jobDetails.Title;
+            job.PickupAddress = jobDetails.PickupAddress;
+            job.DropoffAddress = jobDetails.DropoffAddress;
+            job.Status = jobDetails.Status;
+            job.Priority = jobDetails.Priority;
+            job.Amount = jobDetails.Amount;
+            job.EstimatedDeliveryTime = jobDetails.EstimatedDeliveryTime;
+            job.AssignedDriverId = jobDetails.AssignedDriverId;
+            job.UpdatedAt = DateTime.UtcNow;
+
+            this.dbContext.Jobs.Update(job);
+            await this.dbContext.SaveChangesAsync();
+            return job as IJob;
+        }
+
+        public async Task<bool> DeleteJobAsync(string id)
+        {
+            var job = await this.dbContext.Jobs.FindAsync(id);
+            if (job == null)
+            {
+                return false;
+            }
+
+            this.dbContext.Jobs.Remove(job);
+            await this.dbContext.SaveChangesAsync();
+            return true;
+        }
     }
 }
