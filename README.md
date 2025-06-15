@@ -23,6 +23,12 @@ It features:
 - **Backend:** Azure Functions v4 (.NET 8), Entity Framework Core, Pomelo MySQL provider, Azure App Configuration, Key Vault
 - **Database:** MySQL
 - **Dev Tools:** ESLint, Prettier, TypeScript, xUnit for backend tests
+## 🆕 Recent Changes
+- Upgraded all .NET projects to **.NET 8**.
+- Added integration and architecture tests with **xUnit** and GitHub Actions CI.
+- Fixed linting/build errors and applied formatting across the repo.
+- Added initial Azure App Configuration support.
+
 
 ### Clean Architecture
 
