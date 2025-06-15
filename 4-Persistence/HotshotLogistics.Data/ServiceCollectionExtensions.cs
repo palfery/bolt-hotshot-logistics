@@ -1,12 +1,16 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using HotshotLogistics.Data.Repositories;
-using HotshotLogistics.Contracts.Repositories;
+// <copyright file="ServiceCollectionExtensions.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace HotshotLogistics.Data
 {
+    using System;
+    using HotshotLogistics.Contracts.Repositories;
+    using HotshotLogistics.Data.Repositories;
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
+
     public static class ServiceCollectionExtensions
     {
         public static IServiceCollection AddHotshotDbContext(this IServiceCollection services, IConfiguration configuration)

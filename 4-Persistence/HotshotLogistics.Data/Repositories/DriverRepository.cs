@@ -1,60 +1,74 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using HotshotLogistics.Contracts.Models;
-using HotshotLogistics.Contracts.Repositories;
-using HotshotLogistics.Data;
-using HotshotLogistics.Domain.Models;
+﻿// <copyright file="DriverRepository.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace HotshotLogistics.Data.Repositories
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using HotshotLogistics.Contracts.Models;
+    using HotshotLogistics.Contracts.Repositories;
+    using HotshotLogistics.Domain.Models;
+    using Microsoft.EntityFrameworkCore;
 
+    /// <summary>
+    /// Repository for managing Driver entities.
+    /// </summary>
     public class DriverRepository : IDriverRepository
     {
-        private readonly HotshotDbContext _dbContext;
+        private readonly HotshotDbContext context;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DriverRepository"/> class.
+        /// </summary>
+        /// <param name="dbContext">The database context.</param>
         public DriverRepository(HotshotDbContext dbContext)
         {
-            _dbContext = dbContext;
+            this.context = dbContext;
         }
 
+        /// <inheritdoc/>
         public async Task<IEnumerable<IDriver>> GetDriversAsync()
         {
-            return await _dbContext.Drivers.Cast<IDriver>().ToListAsync();
+            return await this.context.Drivers.Cast<IDriver>().ToListAsync();
         }
 
+        /// <inheritdoc/>
         public async Task<IDriver?> GetDriverByIdAsync(int id)
         {
-            return await _dbContext.Drivers.FindAsync(id) as IDriver;
+            return await this.context.Drivers.FindAsync(id) as IDriver;
         }
 
-
+        /// <inheritdoc/>
         public async Task<IDriver> CreateDriverAsync(IDriver driver)
         {
-            driver.CreatedAt = System.DateTime.UtcNow;
-            await _dbContext.Drivers.AddAsync((Driver)driver);
-            await _dbContext.SaveChangesAsync();
-            return driver;
+            var domainDriver = (Driver)driver;
+            domainDriver.CreatedAt = DateTime.UtcNow;
+            await this.context.Drivers.AddAsync(domainDriver);
+            await this.context.SaveChangesAsync();
+            return domainDriver;
         }
 
-        public async Task DeleteDriverAsync(int id)
-        {
-            var entity = await _dbContext.Drivers.FindAsync(id);
-            if (entity != null)
-            {
-                _dbContext.Drivers.Remove(entity);
-                await _dbContext.SaveChangesAsync();
-            }
-        }
-
+        /// <inheritdoc/>
         public async Task<IDriver> UpdateDriverAsync(IDriver driver)
         {
-            _dbContext.Drivers.Update((Driver)driver);
-            await _dbContext.SaveChangesAsync();
-            return driver;
+            var domainDriver = (Driver)driver;
+            domainDriver.UpdatedAt = DateTime.UtcNow;
+            this.context.Drivers.Update(domainDriver);
+            await this.context.SaveChangesAsync();
+            return domainDriver;
+        }
+
+        /// <inheritdoc/>
+        public async Task DeleteDriverAsync(int id)
+        {
+            var driver = await this.context.Drivers.FindAsync(id);
+            if (driver != null)
+            {
+                this.context.Drivers.Remove(driver);
+                await this.context.SaveChangesAsync();
+            }
         }
     }
 }

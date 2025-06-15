@@ -140,7 +140,7 @@ public class DataIntegrationTests
         using var context = CreateContext();
         var repo = new JobRepository(context);
         var job = context.Jobs.First();
-        
+
         // Test status transitions
         job.Status = JobStatus.Assigned;
         await repo.UpdateJobAsync(job.Id, job);
@@ -164,7 +164,7 @@ public class DataIntegrationTests
         using var context = CreateContext();
         var repo = new JobRepository(context);
         var job = context.Jobs.First();
-        
+
         // Test priority changes
         job.Priority = JobPriority.Low;
         await repo.UpdateJobAsync(job.Id, job);
@@ -244,4 +244,4 @@ public class DataIntegrationTests
         Assert.Equal(newExpiryDate.Date, updated!.LicenseExpiryDate.Date);
         Assert.Equal(newLicenseNumber, updated.LicenseNumber);
     }
-} 
+}

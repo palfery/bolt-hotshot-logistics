@@ -13,7 +13,7 @@ namespace HotshotLogistics.Application.Services
 
         public DriverService(IDriverRepository driverRepo)
         {
-            _driverRepo = driverRepo;   
+            _driverRepo = driverRepo;
         }
         public Task<IDriver> CreateDriverAsync(IDriver driver)
         {

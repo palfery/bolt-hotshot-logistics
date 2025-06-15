@@ -1,6 +1,6 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿// <copyright file="20250615150924_InitialCreateWithSeed.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 #nullable disable
 
@@ -8,6 +8,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace HotshotLogistics.Data.Migrations
 {
+    using System;
+    using Microsoft.EntityFrameworkCore.Metadata;
+    using Microsoft.EntityFrameworkCore.Migrations;
+
     /// <inheritdoc />
     public partial class InitialCreateWithSeed : Migration
     {
@@ -36,7 +40,7 @@ namespace HotshotLogistics.Data.Migrations
                     LicenseExpiryDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     IsActive = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
+                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                 },
                 constraints: table =>
                 {
@@ -65,7 +69,7 @@ namespace HotshotLogistics.Data.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     AssignedDriverId = table.Column<int>(type: "int", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
+                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                 },
                 constraints: table =>
                 {
@@ -85,7 +89,7 @@ namespace HotshotLogistics.Data.Migrations
                 values: new object[,]
                 {
                     { 1, new DateTime(2024, 6, 15, 0, 0, 0, 0, DateTimeKind.Utc), "alice.smith@example.com", "Alice", true, "Smith", new DateTime(2030, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "A1234567", "555-1234", null },
-                    { 2, new DateTime(2024, 6, 15, 0, 0, 0, 0, DateTimeKind.Utc), "bob.johnson@example.com", "Bob", true, "Johnson", new DateTime(2031, 12, 31, 0, 0, 0, 0, DateTimeKind.Unspecified), "B7654321", "555-5678", null }
+                    { 2, new DateTime(2024, 6, 15, 0, 0, 0, 0, DateTimeKind.Utc), "bob.johnson@example.com", "Bob", true, "Johnson", new DateTime(2031, 12, 31, 0, 0, 0, 0, DateTimeKind.Unspecified), "B7654321", "555-5678", null },
                 });
 
             migrationBuilder.InsertData(
@@ -94,7 +98,7 @@ namespace HotshotLogistics.Data.Migrations
                 values: new object[,]
                 {
                     { "job-1", 100.00m, 1, new DateTime(2024, 6, 15, 0, 0, 0, 0, DateTimeKind.Utc), "456 Elm St", "2024-06-16T10:00:00Z", "123 Main St", "High", "Pending", "Deliver Package A", null },
-                    { "job-2", 75.50m, 2, new DateTime(2024, 6, 15, 0, 0, 0, 0, DateTimeKind.Utc), "321 Pine St", "2024-06-17T14:00:00Z", "789 Oak St", "Medium", "InTransit", "Deliver Package B", null }
+                    { "job-2", 75.50m, 2, new DateTime(2024, 6, 15, 0, 0, 0, 0, DateTimeKind.Utc), "321 Pine St", "2024-06-17T14:00:00Z", "789 Oak St", "Medium", "InTransit", "Deliver Package B", null },
                 });
 
             migrationBuilder.CreateIndex(
