@@ -23,6 +23,25 @@ It features:
 - **Backend:** Azure Functions v4 (.NET 8), Entity Framework Core, Pomelo MySQL provider, Azure App Configuration, Key Vault
 - **Database:** MySQL
 - **Dev Tools:** ESLint, Prettier, TypeScript, xUnit for backend tests
+
+### Clean Architecture
+
+The repository is organized using a classic **Clean Architecture** approach.
+Presentation projects (APIs, web dashboard, and mobile app) only depend on the
+Application layer, which in turn depends on Domain abstractions. Infrastructure
+and persistence concerns live in separate projects so the core business logic
+remains framework agnostic.
+
+Folder mapping:
+
+1. **0-Base** – foundational types shared between layers
+2. **1-Presentation** – Next.js admin portal, Expo mobile app and Azure
+   Functions API
+3. **2-Application** – orchestrates use cases and business rules
+4. **3-Domain** – entities and contracts that model the logistics domain
+5. **4-Persistence** – EF Core implementations and data migrations
+6. **5-Test** – unit, integration and architecture tests
+7. **7-Deployment** – docker compose files and deployment scripts
 ## 🆕 Recent Changes
 - Upgraded all .NET projects to **.NET 8**.
 - Added integration and architecture tests with **xUnit** and GitHub Actions CI.
