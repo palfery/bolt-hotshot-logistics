@@ -24,6 +24,31 @@ It features:
 - **Database:** MySQL
 - **Dev Tools:** ESLint, Prettier, TypeScript, xUnit for backend tests
 
+### Clean Architecture
+
+The repository is organized using a classic **Clean Architecture** approach.
+Presentation projects (APIs, web dashboard, and mobile app) only depend on the
+Application layer, which in turn depends on Domain abstractions. Infrastructure
+and persistence concerns live in separate projects so the core business logic
+remains framework agnostic.
+
+Folder mapping:
+
+1. **0-Base** – foundational types shared between layers
+2. **1-Presentation** – Next.js admin portal, Expo mobile app and Azure
+   Functions API
+3. **2-Application** – orchestrates use cases and business rules
+4. **3-Domain** – entities and contracts that model the logistics domain
+5. **4-Persistence** – EF Core implementations and data migrations
+6. **5-Test** – unit, integration and architecture tests
+7. **7-Deployment** – docker compose files and deployment scripts
+## 🆕 Recent Changes
+- Upgraded all .NET projects to **.NET 8**.
+- Added integration and architecture tests with **xUnit** and GitHub Actions CI.
+- Fixed linting/build errors and applied formatting across the repo.
+- Added initial Azure App Configuration support.
+
+
 ---
 
 ## 📁 Project Structure
@@ -31,26 +56,38 @@ It features:
 ```
 root/
 │
+├─ 0-Base/
+│   └─ HotshotLogistics.Core/             # base types shared across layers
+│
 ├─ 1-Presentation/
-│   ├─ admin-dashboard/        # React/Next.js Admin Dashboard
-│   ├─ HotshotLogistics.mobile/# Expo React Native Driver App
-│   ├─ components/             # Shared React Native components
-│   ├─ hooks/                  # Shared hooks
-│   ├─ types/                  # Shared TS types for jobs/drivers
-│   ├─ app.json, package.json, tsconfig.json, etc.
+│   ├─ HotshotLogistics.Api/              # .NET Azure Functions API
+│   ├─ HotshotLogistics.mobile/           # Expo React Native driver app
+│   └─ admin-dashboard/                   # Next.js admin portal
 │
 ├─ 2-Application/
-│   ├─ HotshotLogistics.Core/  # Domain models, business logic
-│   └─ Models/                 # Entity definitions (e.g. Driver)
+│   └─ HotshotLogistics.Application/      # application services & orchestrators
+│
+├─ 3-Domain/
+│   ├─ HotshotLogistics.Contracts/        # domain interfaces
+│   └─ HotshotLogistics.Domain/           # domain models
 │
 ├─ 4-Persistence/
-│   ├─ HotshotLogistics.Infrastructure/  # EF Core DbContext, migrations, repo impl.
-│   └─ Data/
+│   ├─ HotshotLogistics.Data/             # EF Core migrations & seed data
+│   └─ HotshotLogistics.Infrastructure/   # repository implementations
 │
 ├─ 5-Test/
-│   └─ tests/HotshotLogistics.Tests/     # xUnit tests for backend
+│   └─ tests/HotshotLogistics.Tests/      # xUnit tests for backend
 │
-├─ backend/                    # Node.js Backend API
+├─ 6-Lib/
+│   └─ data/                              # sample data and utilities
+│
+├─ 7-Deployment/                          # docker compose & deployment scripts
+│
+├─ admin-dashboard/                       # copy of Next.js portal (shortcut)
+├─ components/                            # shared UI components
+├─ hooks/                                 # shared hooks
+├─ backend/                               # Node.js example API
+├─ data/                                  # miscellaneous mock data
 │
 ├─ .gitignore, README.md, etc.
 ```
