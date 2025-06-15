@@ -1,19 +1,27 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Design;
+// <copyright file="HotshotDbContextFactory.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
-namespace HotshotLogistics.Data;
-
-public class HotshotDbContextFactory : IDesignTimeDbContextFactory<HotshotDbContext>
+namespace HotshotLogistics.Data
 {
-    public HotshotDbContext CreateDbContext(string[] args)
-    {
-        var optionsBuilder = new DbContextOptionsBuilder<HotshotDbContext>();
-        var connectionString = "server=localhost;port=3306;database=hotshot_logistics;user=hotshot_user;password=hotshot_password";
-        
-        optionsBuilder.UseMySql(connectionString, 
-            ServerVersion.AutoDetect(connectionString),
-            options => options.EnableRetryOnFailure());
+    using System;
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore.Design;
 
-        return new HotshotDbContext(optionsBuilder.Options);
+    /// <summary>
+    /// Factory for creating HotshotDbContext instances at design time.
+    /// </summary>
+    public class HotshotDbContextFactory : IDesignTimeDbContextFactory<HotshotDbContext>
+    {
+        /// <inheritdoc/>
+        public HotshotDbContext CreateDbContext(string[] args)
+        {
+            var dbUser = Environment.GetEnvironmentVariable("HSL_DBUser") ?? "root";
+            var dbPassword = Environment.GetEnvironmentVariable("HSL_DBPassword") ?? string.Empty;
+            var connectionString = $"server=localhost;port=3306;database=hotshot_logistics;user={dbUser};password={dbPassword}";
+            var optionsBuilder = new DbContextOptionsBuilder<HotshotDbContext>();
+            optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+            return new HotshotDbContext(optionsBuilder.Options);
+        }
     }
-} 
+}

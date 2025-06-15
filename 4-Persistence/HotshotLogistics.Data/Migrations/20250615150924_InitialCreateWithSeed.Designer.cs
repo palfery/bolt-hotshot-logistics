@@ -3,6 +3,7 @@ using System;
 using HotshotLogistics.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HotshotLogistics.Data.Migrations
 {
     [DbContext(typeof(HotshotDbContext))]
-    partial class HotshotDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250615150924_InitialCreateWithSeed")]
+    partial class InitialCreateWithSeed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

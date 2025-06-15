@@ -21,7 +21,7 @@ public class ArchitectureTests
             .HaveDependencyOnAny(Application, Data, Infrastructure, Presentation)
             .GetResult();
 
-        Assert.True(result.IsSuccessful, string.Join(',', result.FailingTypeNames));
+        Assert.True(result.IsSuccessful, string.Join(',', result.FailingTypeNames ?? Array.Empty<string>()));
     }
 
     [Fact]
@@ -32,7 +32,7 @@ public class ArchitectureTests
             .HaveDependencyOn(Presentation)
             .GetResult();
 
-        Assert.True(result.IsSuccessful, string.Join(',', result.FailingTypeNames));
+        Assert.True(result.IsSuccessful, string.Join(',', result.FailingTypeNames ?? Array.Empty<string>()));
     }
 
     [Fact]
@@ -43,6 +43,6 @@ public class ArchitectureTests
             .Should().NotBePublic()
             .GetResult();
 
-        Assert.True(result.IsSuccessful, string.Join(',', result.FailingTypeNames));
+        Assert.True(result.IsSuccessful, string.Join(',', result.FailingTypeNames ?? Array.Empty<string>()));
     }
 }
