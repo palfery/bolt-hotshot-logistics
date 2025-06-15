@@ -56,26 +56,38 @@ Folder mapping:
 ```
 root/
 │
+├─ 0-Base/
+│   └─ HotshotLogistics.Core/             # base types shared across layers
+│
 ├─ 1-Presentation/
-│   ├─ admin-dashboard/        # React/Next.js Admin Dashboard
-│   ├─ HotshotLogistics.mobile/# Expo React Native Driver App
-│   ├─ components/             # Shared React Native components
-│   ├─ hooks/                  # Shared hooks
-│   ├─ types/                  # Shared TS types for jobs/drivers
-│   ├─ app.json, package.json, tsconfig.json, etc.
+│   ├─ HotshotLogistics.Api/              # .NET Azure Functions API
+│   ├─ HotshotLogistics.mobile/           # Expo React Native driver app
+│   └─ admin-dashboard/                   # Next.js admin portal
 │
 ├─ 2-Application/
-│   ├─ HotshotLogistics.Core/  # Domain models, business logic
-│   └─ Models/                 # Entity definitions (e.g. Driver)
+│   └─ HotshotLogistics.Application/      # application services & orchestrators
+│
+├─ 3-Domain/
+│   ├─ HotshotLogistics.Contracts/        # domain interfaces
+│   └─ HotshotLogistics.Domain/           # domain models
 │
 ├─ 4-Persistence/
-│   ├─ HotshotLogistics.Infrastructure/  # EF Core DbContext, migrations, repo impl.
-│   └─ Data/
+│   ├─ HotshotLogistics.Data/             # EF Core migrations & seed data
+│   └─ HotshotLogistics.Infrastructure/   # repository implementations
 │
 ├─ 5-Test/
-│   └─ tests/HotshotLogistics.Tests/     # xUnit tests for backend
+│   └─ tests/HotshotLogistics.Tests/      # xUnit tests for backend
 │
-├─ backend/                    # Node.js Backend API
+├─ 6-Lib/
+│   └─ data/                              # sample data and utilities
+│
+├─ 7-Deployment/                          # docker compose & deployment scripts
+│
+├─ admin-dashboard/                       # copy of Next.js portal (shortcut)
+├─ components/                            # shared UI components
+├─ hooks/                                 # shared hooks
+├─ backend/                               # Node.js example API
+├─ data/                                  # miscellaneous mock data
 │
 ├─ .gitignore, README.md, etc.
 ```
