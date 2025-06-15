@@ -3,7 +3,7 @@ using HotshotLogistics.Contracts.Models;
 
 namespace HotshotLogistics.Domain.Models;
 
-public class Job
+public class Job : IJob
 {
     public string Id { get; set; } = Guid.NewGuid().ToString(); // Primary Key
     public string Title { get; set; } = string.Empty;
