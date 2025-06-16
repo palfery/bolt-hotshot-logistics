@@ -102,7 +102,21 @@ public class DataIntegrationTests
             Amount = 10.0m,
             EstimatedDeliveryTime = "2024-07-01T10:00:00Z"
         };
-        var created = await repo.CreateJobAsync(newJob);
+        var jobDto = new JobDto
+        {
+            Id = newJob.Id,
+            Title = newJob.Title,
+            PickupAddress = newJob.PickupAddress,
+            DropoffAddress = newJob.DropoffAddress,
+            Status = newJob.Status,
+            Priority = newJob.Priority,
+            Amount = newJob.Amount,
+            EstimatedDeliveryTime = newJob.EstimatedDeliveryTime,
+            AssignedDriverId = newJob.AssignedDriverId,
+            CreatedAt = newJob.CreatedAt,
+            UpdatedAt = newJob.UpdatedAt
+        };
+        var created = await repo.CreateJobAsync(jobDto);
         Assert.NotNull(created.Id);
         var fetched = await context.Jobs.FindAsync(created.Id);
         Assert.NotNull(fetched);
@@ -116,7 +130,21 @@ public class DataIntegrationTests
         var repo = new JobRepository(context);
         var job = context.Jobs.First();
         job.Title = "Updated Title";
-        await repo.UpdateJobAsync(job.Id, job);
+        var jobDto = new JobDto
+        {
+            Id = job.Id,
+            Title = job.Title,
+            PickupAddress = job.PickupAddress,
+            DropoffAddress = job.DropoffAddress,
+            Status = job.Status,
+            Priority = job.Priority,
+            Amount = job.Amount,
+            EstimatedDeliveryTime = job.EstimatedDeliveryTime,
+            AssignedDriverId = job.AssignedDriverId,
+            CreatedAt = job.CreatedAt,
+            UpdatedAt = job.UpdatedAt
+        };
+        await repo.UpdateJobAsync(job.Id, jobDto);
         var updated = await context.Jobs.FindAsync(job.Id);
         Assert.Equal("Updated Title", updated!.Title);
     }
@@ -142,17 +170,33 @@ public class DataIntegrationTests
 
         // Test status transitions
         job.Status = JobStatus.Assigned;
-        await repo.UpdateJobAsync(job.Id, job);
+        var jobDto = new JobDto
+        {
+            Id = job.Id,
+            Title = job.Title,
+            PickupAddress = job.PickupAddress,
+            DropoffAddress = job.DropoffAddress,
+            Status = job.Status,
+            Priority = job.Priority,
+            Amount = job.Amount,
+            EstimatedDeliveryTime = job.EstimatedDeliveryTime,
+            AssignedDriverId = job.AssignedDriverId,
+            CreatedAt = job.CreatedAt,
+            UpdatedAt = job.UpdatedAt
+        };
+        await repo.UpdateJobAsync(job.Id, jobDto);
         var updated = await context.Jobs.FindAsync(job.Id);
         Assert.Equal(JobStatus.Assigned, updated!.Status);
 
         job.Status = JobStatus.InTransit;
-        await repo.UpdateJobAsync(job.Id, job);
+        jobDto.Status = job.Status;
+        await repo.UpdateJobAsync(job.Id, jobDto);
         updated = await context.Jobs.FindAsync(job.Id);
         Assert.Equal(JobStatus.InTransit, updated!.Status);
 
         job.Status = JobStatus.Delivered;
-        await repo.UpdateJobAsync(job.Id, job);
+        jobDto.Status = job.Status;
+        await repo.UpdateJobAsync(job.Id, jobDto);
         updated = await context.Jobs.FindAsync(job.Id);
         Assert.Equal(JobStatus.Delivered, updated!.Status);
     }
@@ -163,20 +207,37 @@ public class DataIntegrationTests
         using var context = CreateContext();
         var repo = new JobRepository(context);
         var job = context.Jobs.First();
+        var jobDto = new JobDto
+        {
+            Id = job.Id,
+            Title = job.Title,
+            PickupAddress = job.PickupAddress,
+            DropoffAddress = job.DropoffAddress,
+            Status = job.Status,
+            Priority = job.Priority,
+            Amount = job.Amount,
+            EstimatedDeliveryTime = job.EstimatedDeliveryTime,
+            AssignedDriverId = job.AssignedDriverId,
+            CreatedAt = job.CreatedAt,
+            UpdatedAt = job.UpdatedAt
+        };
 
         // Test priority changes
         job.Priority = JobPriority.Low;
-        await repo.UpdateJobAsync(job.Id, job);
+        jobDto.Priority = job.Priority;
+        await repo.UpdateJobAsync(job.Id, jobDto);
         var updated = await context.Jobs.FindAsync(job.Id);
         Assert.Equal(JobPriority.Low, updated!.Priority);
 
         job.Priority = JobPriority.Medium;
-        await repo.UpdateJobAsync(job.Id, job);
+        jobDto.Priority = job.Priority;
+        await repo.UpdateJobAsync(job.Id, jobDto);
         updated = await context.Jobs.FindAsync(job.Id);
         Assert.Equal(JobPriority.Medium, updated!.Priority);
 
         job.Priority = JobPriority.High;
-        await repo.UpdateJobAsync(job.Id, job);
+        jobDto.Priority = job.Priority;
+        await repo.UpdateJobAsync(job.Id, jobDto);
         updated = await context.Jobs.FindAsync(job.Id);
         Assert.Equal(JobPriority.High, updated!.Priority);
     }
@@ -191,7 +252,21 @@ public class DataIntegrationTests
 
         // Assign driver to job
         job.AssignedDriverId = driver.Id;
-        await repo.UpdateJobAsync(job.Id, job);
+        var jobDto = new JobDto
+        {
+            Id = job.Id,
+            Title = job.Title,
+            PickupAddress = job.PickupAddress,
+            DropoffAddress = job.DropoffAddress,
+            Status = job.Status,
+            Priority = job.Priority,
+            Amount = job.Amount,
+            EstimatedDeliveryTime = job.EstimatedDeliveryTime,
+            AssignedDriverId = job.AssignedDriverId,
+            CreatedAt = job.CreatedAt,
+            UpdatedAt = job.UpdatedAt
+        };
+        await repo.UpdateJobAsync(job.Id, jobDto);
 
         // Verify assignment
         var updated = await context.Jobs
