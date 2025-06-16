@@ -1,8 +1,8 @@
 using Azure.Identity;
-using HotshotLogistics.Application.Services;
-using HotshotLogistics.Contracts.Services;
+using HotshotLogistics.Application;
 using HotshotLogistics.Data;
-using HotshotLogistics.Data.Repositories;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -73,8 +73,10 @@ var host = new HostBuilder()
         _ = services.AddHotshotRepositories();
 
         // Register application services
-        _ = services.AddScoped<IDriverService, DriverService>();
-
+        services.AddApplicationServices();
+        
+        // Add controllers
+        services.AddControllers();
     })
     .Build();
 
