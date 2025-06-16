@@ -1,4 +1,4 @@
-# Bolt Hotshot Logistics
+# Hotshot Logistics
 
 A modern logistics platform for hotshot delivery, built for speed, reliability, and flexibility.  
 This monorepo contains the full-stack solution: a React-based Admin Dashboard, a cross-platform Driver Mobile App, and a .NET/Azure-based backend with MySQL.
