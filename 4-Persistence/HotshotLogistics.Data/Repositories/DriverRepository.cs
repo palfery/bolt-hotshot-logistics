@@ -6,6 +6,7 @@ namespace HotshotLogistics.Data.Repositories
 {
     using System;
     using System.Collections.Generic;
+    using System.Threading;
     using System.Threading.Tasks;
     using HotshotLogistics.Contracts.Models;
     using HotshotLogistics.Contracts.Repositories;
@@ -15,7 +16,7 @@ namespace HotshotLogistics.Data.Repositories
     /// <summary>
     /// Repository for managing Driver entities.
     /// </summary>
-    public class DriverRepository : IDriverRepository
+    internal class DriverRepository : IDriverRepository
     {
         private readonly HotshotDbContext context;
 
@@ -29,45 +30,45 @@ namespace HotshotLogistics.Data.Repositories
         }
 
         /// <inheritdoc/>
-        public async Task<IEnumerable<IDriver>> GetDriversAsync()
+        public async Task<IEnumerable<IDriver>> GetDriversAsync(CancellationToken cancellationToken = default)
         {
-            return await this.context.Drivers.Cast<IDriver>().ToListAsync();
+            return await this.context.Drivers.Cast<IDriver>().ToListAsync(cancellationToken);
         }
 
         /// <inheritdoc/>
-        public async Task<IDriver?> GetDriverByIdAsync(int id)
+        public async Task<IDriver?> GetDriverByIdAsync(int id, CancellationToken cancellationToken = default)
         {
-            return await this.context.Drivers.FindAsync(id) as IDriver;
+            return await this.context.Drivers.FindAsync(new object[] { id }, cancellationToken) as IDriver;
         }
 
         /// <inheritdoc/>
-        public async Task<IDriver> CreateDriverAsync(IDriver driver)
+        public async Task<IDriver> CreateDriverAsync(IDriver driver, CancellationToken cancellationToken = default)
         {
             var domainDriver = (Driver)driver;
             domainDriver.CreatedAt = DateTime.UtcNow;
-            await this.context.Drivers.AddAsync(domainDriver);
-            await this.context.SaveChangesAsync();
+            await this.context.Drivers.AddAsync(domainDriver, cancellationToken);
+            await this.context.SaveChangesAsync(cancellationToken);
             return domainDriver;
         }
 
         /// <inheritdoc/>
-        public async Task<IDriver> UpdateDriverAsync(IDriver driver)
+        public async Task<IDriver> UpdateDriverAsync(IDriver driver, CancellationToken cancellationToken = default)
         {
             var domainDriver = (Driver)driver;
             domainDriver.UpdatedAt = DateTime.UtcNow;
             this.context.Drivers.Update(domainDriver);
-            await this.context.SaveChangesAsync();
+            await this.context.SaveChangesAsync(cancellationToken);
             return domainDriver;
         }
 
         /// <inheritdoc/>
-        public async Task DeleteDriverAsync(int id)
+        public async Task DeleteDriverAsync(int id, CancellationToken cancellationToken = default)
         {
-            var driver = await this.context.Drivers.FindAsync(id);
+            var driver = await this.context.Drivers.FindAsync(new object[] { id }, cancellationToken);
             if (driver != null)
             {
                 this.context.Drivers.Remove(driver);
-                await this.context.SaveChangesAsync();
+                await this.context.SaveChangesAsync(cancellationToken);
             }
         }
     }

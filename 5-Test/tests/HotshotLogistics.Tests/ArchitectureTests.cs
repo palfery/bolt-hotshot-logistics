@@ -3,6 +3,7 @@ using Xunit;
 using HotshotLogistics.Domain.Models;
 using HotshotLogistics.Application.Services;
 using HotshotLogistics.Data.Repositories;
+using System.Linq;
 
 namespace HotshotLogistics.Tests;
 
@@ -21,7 +22,7 @@ public class ArchitectureTests
             .HaveDependencyOnAny(Application, Data, Infrastructure, Presentation)
             .GetResult();
 
-        Assert.True(result.IsSuccessful, string.Join(',', result.FailingTypeNames));
+        Assert.True(result.IsSuccessful, result.FailingTypeNames != null && result.FailingTypeNames.Any() ? string.Join(",", result.FailingTypeNames) : string.Empty);
     }
 
     [Fact]
@@ -32,7 +33,7 @@ public class ArchitectureTests
             .HaveDependencyOn(Presentation)
             .GetResult();
 
-        Assert.True(result.IsSuccessful, string.Join(',', result.FailingTypeNames));
+        Assert.True(result.IsSuccessful, result.FailingTypeNames != null && result.FailingTypeNames.Any() ? string.Join(",", result.FailingTypeNames) : string.Empty);
     }
 
     [Fact]
@@ -43,6 +44,6 @@ public class ArchitectureTests
             .Should().NotBePublic()
             .GetResult();
 
-        Assert.True(result.IsSuccessful, string.Join(',', result.FailingTypeNames));
+        Assert.True(result.IsSuccessful, result.FailingTypeNames != null && result.FailingTypeNames.Any() ? string.Join(",", result.FailingTypeNames) : string.Empty);
     }
 }
