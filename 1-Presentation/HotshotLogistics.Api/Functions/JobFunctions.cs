@@ -15,8 +15,6 @@ public class JobFunctions
     private readonly JsonSerializerOptions _jsonSerializerOptions = new JsonSerializerOptions
     {
         PropertyNameCaseInsensitive = true,
-        // Add any other converters if needed, e.g., for enums as strings
-        // Converters = { new JsonStringEnumConverter() } // If enums are sent as strings
     };
 
 
@@ -31,7 +29,7 @@ public class JobFunctions
     {
         var jobs = await _jobService.GetJobsAsync();
         var response = req.CreateResponse(HttpStatusCode.OK);
-        await response.WriteAsJsonAsync(jobs, _jsonSerializerOptions);
+        await response.WriteAsJsonAsync(jobs);
         return response;
     }
 
@@ -49,7 +47,7 @@ public class JobFunctions
         }
 
         var response = req.CreateResponse(HttpStatusCode.OK);
-        await response.WriteAsJsonAsync(job, _jsonSerializerOptions);
+        await response.WriteAsJsonAsync(job);
         return response;
     }
 
@@ -71,7 +69,7 @@ public class JobFunctions
 
         var createdJob = await _jobService.CreateJobAsync(jobDto);
         var response = req.CreateResponse(HttpStatusCode.Created);
-        await response.WriteAsJsonAsync(createdJob, _jsonSerializerOptions);
+        await response.WriteAsJsonAsync(createdJob);
         return response;
     }
 
@@ -99,7 +97,7 @@ public class JobFunctions
         }
 
         var response = req.CreateResponse(HttpStatusCode.OK);
-        await response.WriteAsJsonAsync(updatedJob, _jsonSerializerOptions);
+        await response.WriteAsJsonAsync(updatedJob);
         return response;
     }
 
