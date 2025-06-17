@@ -42,9 +42,5 @@ public class JobAssignment : IJobAssignment
     /// </summary>
     public JobAssignment()
     {
-        if (AssignedAt == default)
-        {
-            AssignedAt = DateTime.UtcNow;
-        }
     }
 }
