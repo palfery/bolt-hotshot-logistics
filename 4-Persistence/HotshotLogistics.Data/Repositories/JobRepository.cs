@@ -12,6 +12,7 @@ namespace HotshotLogistics.Data.Repositories
     using HotshotLogistics.Contracts.Repositories;
     using HotshotLogistics.Domain.Models;
     using Microsoft.EntityFrameworkCore;
+    using System.Threading;
 
     /// <summary>
     /// Repository for managing Job entities.
@@ -73,7 +74,7 @@ namespace HotshotLogistics.Data.Repositories
         }
 
         /// <inheritdoc/>
-        public async Task<IJob> CreateJobAsync(IJob jobDto)
+        public async Task<IJob> CreateJobAsync(IJob jobDto, CancellationToken cancellationToken = default)
         {
             var job = new Job
             {
@@ -90,8 +91,22 @@ namespace HotshotLogistics.Data.Repositories
             };
 
             this.dbContext.Jobs.Add(job);
-            await this.dbContext.SaveChangesAsync();
-            return (IJob)job;
+            await this.dbContext.SaveChangesAsync(cancellationToken);
+            // Map to JobDto
+            return new JobDto
+            {
+                Id = job.Id,
+                Title = job.Title,
+                PickupAddress = job.PickupAddress,
+                DropoffAddress = job.DropoffAddress,
+                Status = job.Status,
+                Priority = job.Priority,
+                Amount = job.Amount,
+                EstimatedDeliveryTime = job.EstimatedDeliveryTime,
+                AssignedDriverId = job.AssignedDriverId,
+                CreatedAt = job.CreatedAt,
+                UpdatedAt = job.UpdatedAt
+            };
         }
 
         public async Task<IJob?> GetJobByIdAsync(string id)
@@ -102,17 +117,25 @@ namespace HotshotLogistics.Data.Repositories
             return job as IJob;
         }
 
-        public async Task<IEnumerable<IJob>> GetJobsAsync()
+        public async Task<IEnumerable<IJob>> GetJobsAsync(CancellationToken cancellationToken = default)
         {
             var jobs = await this.dbContext.Jobs
                                       .AsNoTracking()
-                                      .ToListAsync();
+                                      .ToListAsync(cancellationToken);
             return jobs.Cast<IJob>();
         }
 
-        public async Task<IJob?> UpdateJobAsync(string id, IJob jobDetails)
+        public async Task<IJob?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
         {
-            var job = await this.dbContext.Jobs.FindAsync(id);
+            var job = await this.dbContext.Jobs
+                                     .AsNoTracking()
+                                     .FirstOrDefaultAsync(j => j.Id == id, cancellationToken);
+            return job as IJob;
+        }
+
+        public async Task<IJob?> UpdateJobAsync(string id, IJob jobDetails, CancellationToken cancellationToken = default)
+        {
+            var job = await this.dbContext.Jobs.FindAsync(new object[] { id }, cancellationToken);
             if (job == null)
             {
                 return null;
@@ -129,20 +152,20 @@ namespace HotshotLogistics.Data.Repositories
             job.UpdatedAt = DateTime.UtcNow;
 
             this.dbContext.Jobs.Update(job);
-            await this.dbContext.SaveChangesAsync();
+            await this.dbContext.SaveChangesAsync(cancellationToken);
             return job as IJob;
         }
 
-        public async Task<bool> DeleteJobAsync(string id)
+        public async Task<bool> DeleteJobAsync(string id, CancellationToken cancellationToken = default)
         {
-            var job = await this.dbContext.Jobs.FindAsync(id);
+            var job = await this.dbContext.Jobs.FindAsync(new object[] { id }, cancellationToken);
             if (job == null)
             {
                 return false;
             }
 
             this.dbContext.Jobs.Remove(job);
-            await this.dbContext.SaveChangesAsync();
+            await this.dbContext.SaveChangesAsync(cancellationToken);
             return true;
         }
     }

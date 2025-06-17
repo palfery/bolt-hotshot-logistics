@@ -40,6 +40,8 @@ namespace HotshotLogistics.Data
         public static IServiceCollection AddHotshotRepositories(this IServiceCollection services)
         {
             services.AddScoped<IDriverRepository, DriverRepository>();
+            services.AddScoped<IJobRepository, JobRepository>();
+            services.AddScoped<IJobAssignmentRepository, JobAssignmentRepository>();
             return services;
         }
     }
