@@ -73,7 +73,7 @@ public class JobAssignmentService : IJobAssignmentService
     {
         if (string.IsNullOrWhiteSpace(jobId))
             throw new ArgumentException("Job ID cannot be empty.", nameof(jobId));
-        
+
         if (driverId <= 0)
             throw new ArgumentException("Driver ID must be greater than zero.", nameof(driverId));
 
@@ -90,7 +90,7 @@ public class JobAssignmentService : IJobAssignmentService
         // Check if assignment already exists
         var existingAssignments = await _assignmentRepository.GetByJobIdAsync(jobId, cancellationToken);
         var activeAssignment = existingAssignments.FirstOrDefault(a => a.Status == JobAssignmentStatus.Active);
-        
+
         if (activeAssignment != null)
         {
             throw new InvalidOperationException($"Job {jobId} is already assigned to driver {activeAssignment.DriverId}.");
