@@ -18,11 +18,11 @@ public class JobAssignmentConfiguration : IEntityTypeConfiguration<JobAssignment
         
         builder.Property(a => a.Id)
             .IsRequired()
-            .HasMaxLength(36); // Length of GUID as string
+            .HasMaxLength(GuidStringLength);
             
         builder.Property(a => a.JobId)
             .IsRequired()
-            .HasMaxLength(36); // Length of GUID as string
+            .HasMaxLength(GuidStringLength);
             
         builder.Property(a => a.DriverId)
             .IsRequired();
