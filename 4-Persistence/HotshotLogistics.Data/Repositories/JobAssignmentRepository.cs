@@ -1,8 +1,12 @@
-using Microsoft.EntityFrameworkCore;
-using HotshotLogistics.Contracts.Repositories;
+// <copyright file="JobAssignmentRepository.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
+
 using HotshotLogistics.Contracts.Models;
+using HotshotLogistics.Contracts.Repositories;
 using HotshotLogistics.Data;
 using HotshotLogistics.Domain.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace HotshotLogistics.Data.Repositories;
 
@@ -11,7 +15,7 @@ namespace HotshotLogistics.Data.Repositories;
 /// </summary>
 internal class JobAssignmentRepository : IJobAssignmentRepository
 {
-    private readonly HotshotDbContext _context;
+    private readonly HotshotDbContext context;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="JobAssignmentRepository"/> class.
@@ -19,13 +23,13 @@ internal class JobAssignmentRepository : IJobAssignmentRepository
     /// <param name="context">The database context.</param>
     public JobAssignmentRepository(HotshotDbContext context)
     {
-        _context = context ?? throw new ArgumentNullException(nameof(context));
+        this.context = context ?? throw new ArgumentNullException(nameof(context));
     }
 
     /// <inheritdoc/>
     public async Task<JobAssignmentDto?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
     {
-        var assignment = await _context.JobAssignments
+        var assignment = await this.context.JobAssignments
             .Include(a => a.Driver)
             .Include(a => a.Job)
             .FirstOrDefaultAsync(a => a.Id == id, cancellationToken);
@@ -36,7 +40,7 @@ internal class JobAssignmentRepository : IJobAssignmentRepository
     /// <inheritdoc/>
     public async Task<IEnumerable<JobAssignmentDto>> GetAllAsync(CancellationToken cancellationToken = default)
     {
-        var assignments = await _context.JobAssignments
+        var assignments = await this.context.JobAssignments
             .Include(a => a.Driver)
             .Include(a => a.Job)
             .ToListAsync(cancellationToken);
@@ -47,7 +51,7 @@ internal class JobAssignmentRepository : IJobAssignmentRepository
     /// <inheritdoc/>
     public async Task<IEnumerable<JobAssignmentDto>> GetByDriverIdAsync(int driverId, CancellationToken cancellationToken = default)
     {
-        var assignments = await _context.JobAssignments
+        var assignments = await this.context.JobAssignments
             .Include(a => a.Driver)
             .Include(a => a.Job)
             .Where(a => a.DriverId == driverId)
@@ -59,7 +63,7 @@ internal class JobAssignmentRepository : IJobAssignmentRepository
     /// <inheritdoc/>
     public async Task<IEnumerable<JobAssignmentDto>> GetByJobIdAsync(string jobId, CancellationToken cancellationToken = default)
     {
-        var assignments = await _context.JobAssignments
+        var assignments = await this.context.JobAssignments
             .Include(a => a.Driver)
             .Include(a => a.Job)
             .Where(a => a.JobId == jobId)
@@ -71,7 +75,7 @@ internal class JobAssignmentRepository : IJobAssignmentRepository
     /// <inheritdoc/>
     public async Task<IEnumerable<JobAssignmentDto>> GetActiveAssignmentsAsync(CancellationToken cancellationToken = default)
     {
-        var assignments = await _context.JobAssignments
+        var assignments = await this.context.JobAssignments
             .Include(a => a.Driver)
             .Include(a => a.Job)
             .Where(a => a.Status == JobAssignmentStatus.Active)
@@ -84,7 +88,9 @@ internal class JobAssignmentRepository : IJobAssignmentRepository
     public async Task<JobAssignmentDto> CreateAsync(JobAssignmentDto jobAssignment, CancellationToken cancellationToken = default)
     {
         if (jobAssignment == null)
+        {
             throw new ArgumentNullException(nameof(jobAssignment));
+        }
 
         var entity = new JobAssignment
         {
@@ -92,23 +98,25 @@ internal class JobAssignmentRepository : IJobAssignmentRepository
             DriverId = jobAssignment.DriverId,
             AssignedAt = jobAssignment.AssignedAt,
             Status = jobAssignment.Status,
-            UpdatedAt = DateTime.UtcNow
+            UpdatedAt = DateTime.UtcNow,
         };
 
-        _context.JobAssignments.Add(entity);
-        await _context.SaveChangesAsync(cancellationToken);
+        this.context.JobAssignments.Add(entity);
+        await this.context.SaveChangesAsync(cancellationToken);
 
         // Reload to get navigation properties
-        return (await GetByIdAsync(entity.Id, cancellationToken))!;
+        return (await this.GetByIdAsync(entity.Id, cancellationToken))!;
     }
 
     /// <inheritdoc/>
     public async Task<JobAssignmentDto> UpdateAsync(JobAssignmentDto jobAssignment, CancellationToken cancellationToken = default)
     {
         if (jobAssignment == null)
+        {
             throw new ArgumentNullException(nameof(jobAssignment));
+        }
 
-        var existing = await _context.JobAssignments
+        var existing = await this.context.JobAssignments
             .FirstOrDefaultAsync(a => a.Id == jobAssignment.Id, cancellationToken)
                 ?? throw new KeyNotFoundException($"Job assignment with ID {jobAssignment.Id} not found.");
 
@@ -118,30 +126,34 @@ internal class JobAssignmentRepository : IJobAssignmentRepository
         existing.Status = jobAssignment.Status;
         existing.UpdatedAt = DateTime.UtcNow;
 
-        await _context.SaveChangesAsync(cancellationToken);
+        await this.context.SaveChangesAsync(cancellationToken);
 
         // Reload to get navigation properties
-        return (await GetByIdAsync(existing.Id, cancellationToken))!;
+        return (await this.GetByIdAsync(existing.Id, cancellationToken))!;
     }
 
     /// <inheritdoc/>
     public async Task<bool> DeleteAsync(string id, CancellationToken cancellationToken = default)
     {
-        var assignment = await _context.JobAssignments
+        var assignment = await this.context.JobAssignments
             .FirstOrDefaultAsync(a => a.Id == id, cancellationToken);
 
         if (assignment == null)
+        {
             return false;
+        }
 
-        _context.JobAssignments.Remove(assignment);
-        await _context.SaveChangesAsync(cancellationToken);
+        this.context.JobAssignments.Remove(assignment);
+        await this.context.SaveChangesAsync(cancellationToken);
         return true;
     }
 
     private static JobAssignmentDto? MapToDto(JobAssignment? assignment)
     {
         if (assignment == null)
+        {
             return null;
+        }
 
         return new JobAssignmentDto
         {
@@ -158,8 +170,9 @@ internal class JobAssignmentRepository : IJobAssignmentRepository
                 Email = assignment.Driver.Email,
                 PhoneNumber = assignment.Driver.PhoneNumber,
                 LicenseNumber = assignment.Driver.LicenseNumber,
-                LicenseExpiryDate = assignment.Driver.LicenseExpiryDate
-            } : null,
+                LicenseExpiryDate = assignment.Driver.LicenseExpiryDate,
+            }
+            : null,
             Job = assignment.Job != null ? new JobDto
             {
                 Id = assignment.Job.Id,
@@ -171,8 +184,9 @@ internal class JobAssignmentRepository : IJobAssignmentRepository
                 Amount = assignment.Job.Amount,
                 EstimatedDeliveryTime = assignment.Job.EstimatedDeliveryTime,
                 CreatedAt = assignment.Job.CreatedAt,
-                UpdatedAt = assignment.Job.UpdatedAt
-            } : null
+                UpdatedAt = assignment.Job.UpdatedAt,
+            }
+            : null,
         };
     }
 }

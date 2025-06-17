@@ -4,3 +4,5 @@ root = true
 dotnet_diagnostic.SA1600.severity = none
 dotnet_diagnostic.SA1648.severity = none
 dotnet_diagnostic.SA1118.severity = none
+dotnet_diagnostic.SA1009.severity = none
+dotnet_diagnostic.SA1200.severity = none
