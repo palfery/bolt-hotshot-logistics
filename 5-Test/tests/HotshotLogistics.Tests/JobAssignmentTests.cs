@@ -24,7 +24,7 @@ namespace HotshotLogistics.Tests
             Assert.False(string.IsNullOrWhiteSpace(assignment.Id));
             Assert.Equal(string.Empty, assignment.JobId);
             Assert.Equal(0, assignment.DriverId);
-            Assert.True((DateTime.UtcNow - assignment.AssignedAt).TotalSeconds < 5); // AssignedAt is now
+            Assert.True((DateTime.UtcNow - assignment.AssignedAt).TotalSeconds < 5 ); // AssignedAt is now
             Assert.Equal(JobAssignmentStatus.Active, assignment.Status);
             Assert.Null(assignment.UpdatedAt);
         }
