@@ -11,8 +11,17 @@ namespace HotshotLogistics.Data
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
 
+    /// <summary>
+    /// Extension methods for configuring services.
+    /// </summary>
     public static class ServiceCollectionExtensions
     {
+        /// <summary>
+        /// Adds the Hotshot database context to the service collection.
+        /// </summary>
+        /// <param name="services">The service collection.</param>
+        /// <param name="configuration">The configuration.</param>
+        /// <returns>The service collection for chaining.</returns>
         public static IServiceCollection AddHotshotDbContext(this IServiceCollection services, IConfiguration configuration)
         {
             var connectionString = configuration.GetConnectionString("DefaultConnection");
@@ -37,6 +46,11 @@ namespace HotshotLogistics.Data
             return services;
         }
 
+        /// <summary>
+        /// Adds Hotshot repositories to the service collection.
+        /// </summary>
+        /// <param name="services">The service collection.</param>
+        /// <returns>The service collection for chaining.</returns>
         public static IServiceCollection AddHotshotRepositories(this IServiceCollection services)
         {
             services.AddScoped<IDriverRepository, DriverRepository>();

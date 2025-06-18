@@ -1,33 +1,47 @@
-using HotshotLogistics.Contracts.Models;
-using HotshotLogistics.Contracts.Services;
-using HotshotLogistics.Contracts.Repositories;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+// <copyright file="DriverService.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace HotshotLogistics.Application.Services
 {
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using HotshotLogistics.Contracts.Models;
+    using HotshotLogistics.Contracts.Repositories;
+    using HotshotLogistics.Contracts.Services;
+
+    /// <summary>
+    /// Service for managing drivers.
+    /// </summary>
     public class DriverService : IDriverService
     {
-        private readonly IDriverRepository _driverRepo;
+        private readonly IDriverRepository driverRepository;
 
-        public DriverService(IDriverRepository driverRepo)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DriverService"/> class.
+        /// </summary>
+        /// <param name="driverRepository">The driver repository.</param>
+        public DriverService(IDriverRepository driverRepository)
         {
-            _driverRepo = driverRepo;
+            this.driverRepository = driverRepository;
         }
+
+        /// <inheritdoc/>
         public Task<IDriver> CreateDriverAsync(IDriver driver)
         {
-            return _driverRepo.CreateDriverAsync(driver);
+            return this.driverRepository.CreateDriverAsync(driver);
         }
 
+        /// <inheritdoc/>
         public Task<IDriver?> GetDriverByIdAsync(int id)
         {
-            return _driverRepo.GetDriverByIdAsync(id);
+            return this.driverRepository.GetDriverByIdAsync(id);
         }
 
+        /// <inheritdoc/>
         public Task<IEnumerable<IDriver>> GetDriversAsync()
         {
-            return _driverRepo.GetDriversAsync();
+            return this.driverRepository.GetDriversAsync();
         }
     }
 }
