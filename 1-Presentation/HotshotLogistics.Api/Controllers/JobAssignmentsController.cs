@@ -217,7 +217,7 @@ namespace HotshotLogistics.Api.Controllers
         /// Gets or sets the job ID.
         /// </summary>
         public string JobId { get; set; } = string.Empty;
-        
+
         /// <summary>
         /// Gets or sets the driver ID.
         /// </summary>

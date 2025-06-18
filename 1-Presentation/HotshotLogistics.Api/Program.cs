@@ -90,7 +90,7 @@ namespace HotshotLogistics.Api
 
                     // Register application services
                     services.AddApplicationServices();
-                    
+
                     // Add controllers
                     services.AddControllers();
                 })
