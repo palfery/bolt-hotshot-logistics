@@ -38,7 +38,7 @@ public class JobFunctions
         [HttpTrigger(AuthorizationLevel.Function, "get", Route = "jobs/{id}")] HttpRequestData req,
         string id)
     {
-        var job = await _jobService.GetJobByIdAsync(id);
+        var job = await _jobService.GetByIdAsync(id);
         if (job == null)
         {
             var notFoundResponse = req.CreateResponse(HttpStatusCode.NotFound);

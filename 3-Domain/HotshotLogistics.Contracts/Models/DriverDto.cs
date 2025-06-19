@@ -34,4 +34,4 @@ public class DriverDto : IDriver
 
     /// <inheritdoc/>
     public DateTime? UpdatedAt { get; set; }
-} 
+}
