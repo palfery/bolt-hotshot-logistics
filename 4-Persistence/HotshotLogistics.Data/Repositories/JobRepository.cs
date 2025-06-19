@@ -7,12 +7,12 @@ namespace HotshotLogistics.Data.Repositories
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading;
     using System.Threading.Tasks;
     using HotshotLogistics.Contracts.Models;
     using HotshotLogistics.Contracts.Repositories;
     using HotshotLogistics.Domain.Models;
     using Microsoft.EntityFrameworkCore;
-    using System.Threading;
 
     /// <summary>
     /// Repository for managing Job entities.
@@ -92,6 +92,7 @@ namespace HotshotLogistics.Data.Repositories
 
             this.dbContext.Jobs.Add(job);
             await this.dbContext.SaveChangesAsync(cancellationToken);
+
             // Map to JobDto
             return new JobDto
             {
@@ -105,7 +106,7 @@ namespace HotshotLogistics.Data.Repositories
                 EstimatedDeliveryTime = job.EstimatedDeliveryTime,
                 AssignedDriverId = job.AssignedDriverId,
                 CreatedAt = job.CreatedAt,
-                UpdatedAt = job.UpdatedAt
+                UpdatedAt = job.UpdatedAt,
             };
         }
 
