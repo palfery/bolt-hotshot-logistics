@@ -1,0 +1,33 @@
+name: Terraform Deploy
+
+on:
+  push:
+    branches: [develop]
+    paths:
+      - '7-Deployment/**'
+      - '.github/workflows/terraform.yml'
+  pull_request:
+    paths:
+      - '7-Deployment/**'
+      - '.github/workflows/terraform.yml'
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v2
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.DAVIDS_AZURE_SUB }}
+      - name: Terraform Init
+        run: terraform -chdir=7-Deployment/Azure-deploy/solution/HotshotLogistics init
+      - name: Terraform Plan
+        if: github.event_name == 'pull_request'
+        run: terraform -chdir=7-Deployment/Azure-deploy/solution/HotshotLogistics plan -var-file=../../environments/dev/hotshot.tfvars
+      - name: Terraform Apply
+        if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
+        run: terraform -chdir=7-Deployment/Azure-deploy/solution/HotshotLogistics apply -auto-approve -var-file=../../environments/dev/hotshot.tfvars
