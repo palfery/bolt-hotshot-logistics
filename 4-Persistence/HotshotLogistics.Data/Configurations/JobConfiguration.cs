@@ -2,13 +2,14 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
+using System;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
 namespace HotshotLogistics.Data.Configurations
 {
     using HotshotLogistics.Contracts.Models;
     using HotshotLogistics.Domain.Models;
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.EntityFrameworkCore.Metadata.Builders;
-    using System;
 
     /// <summary>
     /// Configuration for the Job entity.
