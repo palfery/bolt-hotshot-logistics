@@ -36,9 +36,9 @@ namespace HotshotLogistics.Application.Services
         }
 
         /// <inheritdoc/>
-        public Task<IJob?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
+        public Task<IJob?> GetJobByIdAsync(string id, CancellationToken cancellationToken = default)
         {
-            return this.jobRepository.GetByIdAsync(id, cancellationToken);
+            return this.jobRepository.GetJobByIdAsync(id, cancellationToken);
         }
 
         /// <inheritdoc/>
