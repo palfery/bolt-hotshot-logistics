@@ -40,7 +40,7 @@ internal class JobAssignmentRepository : IJobAssignmentRepository
             .Include(a => a.Job)
             .ToListAsync(cancellationToken);
 
-        return assignments.Select(MapToDto)!;
+        return assignments.Select(MapToDto).Where(dto => dto != null)!;
     }
 
     /// <inheritdoc/>
@@ -52,7 +52,7 @@ internal class JobAssignmentRepository : IJobAssignmentRepository
             .Where(a => a.DriverId == driverId)
             .ToListAsync(cancellationToken);
 
-        return assignments.Select(MapToDto)!;
+        return assignments.Select(MapToDto).Where(dto => dto != null)!;
     }
 
     /// <inheritdoc/>
@@ -64,8 +64,7 @@ internal class JobAssignmentRepository : IJobAssignmentRepository
             .Where(a => a.JobId == jobId)
             .ToListAsync(cancellationToken);
 
-        // TODO remove the null override and check for this elsewhere feels like a code smell
-        return assignments.Select(MapToDto)!;
+        return assignments.Select(MapToDto).Where(dto => dto != null)!;
     }
 
     /// <inheritdoc/>
@@ -77,7 +76,7 @@ internal class JobAssignmentRepository : IJobAssignmentRepository
             .Where(a => a.Status == JobAssignmentStatus.Active)
             .ToListAsync(cancellationToken);
 
-        return assignments.Select(MapToDto)!;
+        return assignments.Select(MapToDto).Where(dto => dto != null)!;
     }
 
     /// <inheritdoc/>
@@ -100,8 +99,7 @@ internal class JobAssignmentRepository : IJobAssignmentRepository
         _context.JobAssignments.Add(entity);
         await _context.SaveChangesAsync(cancellationToken);
 
-        // Reload to get navigation properties
-        return (await GetByIdAsync(entity.Id, cancellationToken))!;
+        return MapToDto(entity) ?? throw new InvalidOperationException("Mapping resulted in a null JobAssignmentDto.");
     }
 
     /// <inheritdoc/>
