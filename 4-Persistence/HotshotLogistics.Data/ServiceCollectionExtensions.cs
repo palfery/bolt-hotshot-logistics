@@ -11,7 +11,6 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace HotshotLogistics.Data
 {
-
     /// <summary>
     /// Extension methods for configuring services.
     /// </summary>

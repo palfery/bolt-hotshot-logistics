@@ -14,7 +14,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HotshotLogistics.Data.Repositories
 {
-
     /// <summary>
     /// Repository for managing Job entities.
     /// </summary>
@@ -111,9 +110,7 @@ namespace HotshotLogistics.Data.Repositories
         }
 
         /// <inheritdoc/>
-
         public async Task<IJob?> GetJobByIdAsync(string id, CancellationToken cancellationToken = default)
-
         {
             var job = await dbContext.Jobs
                                      .AsNoTracking()
@@ -159,7 +156,6 @@ namespace HotshotLogistics.Data.Repositories
             job.EstimatedDeliveryTime = jobDetails.EstimatedDeliveryTime;
             job.AssignedDriverId = jobDetails.AssignedDriverId;
             job.UpdatedAt = DateTime.UtcNow;
-
 
             this.dbContext.Jobs.Update(job);
             await this.dbContext.SaveChangesAsync(cancellationToken);

@@ -10,7 +10,7 @@ namespace HotshotLogistics.Application.Services
     using HotshotLogistics.Contracts.Repositories;
     using HotshotLogistics.Contracts.Services;
 
-  /// <summary>
+    /// <summary>
     /// Service for managing drivers.
     /// </summary>
     public class DriverService : IDriverService
