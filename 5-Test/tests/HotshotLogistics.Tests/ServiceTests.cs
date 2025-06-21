@@ -15,9 +15,7 @@ public class DriverServiceTests
         var repoMock = new Mock<IDriverRepository>();
         repoMock.Setup(r => r.GetDriversAsync(It.IsAny<CancellationToken>())).ReturnsAsync(expected);
         var service = new DriverService(repoMock.Object);
-
         var result = await service.GetDriversAsync();
-
         Assert.Equal(expected, result);
         repoMock.Verify(r => r.GetDriversAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
@@ -43,11 +41,11 @@ public class DriverServiceTests
         var repoMock = new Mock<IDriverRepository>();
         repoMock.Setup(r => r.CreateDriverAsync(newDriver, It.IsAny<CancellationToken>())).ReturnsAsync(newDriver);
         var service = new DriverService(repoMock.Object);
-
         var result = await service.CreateDriverAsync(newDriver);
 
         Assert.Equal(newDriver, result);
         repoMock.Verify(r => r.CreateDriverAsync(newDriver, It.IsAny<CancellationToken>()), Times.Once);
+
     }
 }
 
@@ -66,6 +64,7 @@ public class JobServiceTests
 
         Assert.Equal(expected, result);
         repoMock.Verify(r => r.GetJobsAsync(It.IsAny<CancellationToken>()), Times.Once);
+
     }
 
     [Fact]
@@ -94,6 +93,7 @@ public class JobServiceTests
 
         Assert.Equal(job, result);
         repoMock.Verify(r => r.CreateJobAsync(job, It.IsAny<CancellationToken>()), Times.Once);
+
     }
 
     [Fact]
@@ -108,6 +108,7 @@ public class JobServiceTests
 
         Assert.Equal(job, result);
         repoMock.Verify(r => r.UpdateJobAsync("1", job, It.IsAny<CancellationToken>()), Times.Once);
+
     }
 
     [Fact]
@@ -121,6 +122,7 @@ public class JobServiceTests
 
         Assert.True(result);
         repoMock.Verify(r => r.DeleteJobAsync("1", It.IsAny<CancellationToken>()), Times.Once);
+
     }
 }
 

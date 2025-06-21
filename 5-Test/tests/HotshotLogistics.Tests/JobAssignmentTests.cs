@@ -4,9 +4,10 @@
 
 namespace HotshotLogistics.Tests
 {
+
+    using System;
     using HotshotLogistics.Contracts.Models;
     using HotshotLogistics.Domain.Models;
-    using System;
     using Xunit;
 
     /// <summary>
