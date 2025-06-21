@@ -1,6 +1,53 @@
 root = true
 
-[*.cs]
+[*]
+end_of_line = lf
+insert_final_newline = true
+charset = utf-8
+trim_trailing_whitespace = true
+
+[*.{cs,vb}]
+indent_style = space
+indent_size = 4
+dotnet_diagnostic.SA0001.severity = none
+dotnet_diagnostic.SA1101.severity = none
+dotnet_diagnostic.SA1200.severity = none
+dotnet_diagnostic.SA1309.severity = none
+dotnet_diagnostic.SA1633.severity = none
 dotnet_diagnostic.SA1600.severity = none
 dotnet_diagnostic.SA1648.severity = none
 dotnet_diagnostic.SA1118.severity = none
+dotnet_diagnostic.SA1108.severity = none
+dotnet_diagnostic.SA1516.severity = none
+dotnet_diagnostic.SA1303.severity = none
+dotnet_diagnostic.SA1300.severity = none
+dotnet_diagnostic.SA1515.severity = none
+dotnet_diagnostic.SA1513.severity = none
+dotnet_diagnostic.SA1101.severity = none
+dotnet_diagnostic.SA1200.severity = none
+dotnet_diagnostic.SA1309.severity = none
+dotnet_diagnostic.SA1633.severity = none
+dotnet_diagnostic.SA1600.severity = none
+dotnet_diagnostic.SA1648.severity = none
+dotnet_diagnostic.SA1118.severity = none
+dotnet_diagnostic.SA1108.severity = none
+dotnet_diagnostic.SA1516.severity = none
+dotnet_diagnostic.SA1303.severity = none
+dotnet_diagnostic.SA1300.severity = none
+dotnet_diagnostic.SA1515.severity = none
+dotnet_diagnostic.SA1513.severity = none
+
+[*.{xml,config,props,resx,targets,yml,yaml}]
+indent_style = space
+indent_size = 2
+
+[*.json]
+indent_style = space
+indent_size = 2
+
+[*.{ps1,psm1}]
+indent_style = space
+indent_size = 4
+
+[*.{cmd,bat}]
+end_of_line = crlf

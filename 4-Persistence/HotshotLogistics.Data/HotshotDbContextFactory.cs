@@ -18,7 +18,8 @@ namespace HotshotLogistics.Data
         {
             var dbUser = Environment.GetEnvironmentVariable("HSL_DBUser") ?? "root";
             var dbPassword = Environment.GetEnvironmentVariable("HSL_DBPassword") ?? string.Empty;
-            var connectionString = $"server=localhost;port=3306;database=hotshot_logistics;user={dbUser};password={dbPassword}";
+            var dbPort = Environment.GetEnvironmentVariable("HSL_DBPort") ?? "3306";
+            var connectionString = $"server=localhost;port={dbPort};database=hotshot_logistics;user={dbUser};password={dbPassword}";
             var optionsBuilder = new DbContextOptionsBuilder<HotshotDbContext>();
             optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
             return new HotshotDbContext(optionsBuilder.Options);
