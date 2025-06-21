@@ -99,8 +99,7 @@ internal class JobAssignmentRepository : IJobAssignmentRepository
         _context.JobAssignments.Add(entity);
         await _context.SaveChangesAsync(cancellationToken);
 
-        return assignments.Select(MapToDto).Where(dto => dto != null);
-        return (await GetByIdAsync(entity.Id, cancellationToken))!;
+        return MapToDto(entity) ?? throw new InvalidOperationException("Mapping resulted in a null JobAssignmentDto.");
     }
 
     /// <inheritdoc/>
