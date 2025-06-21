@@ -74,7 +74,7 @@ var host = new HostBuilder()
 
         // Register application services
         services.AddApplicationServices();
-        
+
         // Add controllers
         services.AddControllers();
     })
