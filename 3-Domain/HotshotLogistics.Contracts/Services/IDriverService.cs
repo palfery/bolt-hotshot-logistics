@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using HotshotLogistics.Contracts.Models;
 
 namespace HotshotLogistics.Contracts.Services;

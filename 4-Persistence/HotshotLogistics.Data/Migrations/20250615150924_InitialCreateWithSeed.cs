@@ -8,9 +8,9 @@
 
 namespace HotshotLogistics.Data.Migrations
 {
-    using System;
     using Microsoft.EntityFrameworkCore.Metadata;
     using Microsoft.EntityFrameworkCore.Migrations;
+    using System;
 
     /// <inheritdoc />
     public partial class InitialCreateWithSeed : Migration

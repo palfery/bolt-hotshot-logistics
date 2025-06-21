@@ -4,12 +4,12 @@
 
 namespace HotshotLogistics.Data
 {
-    using System;
     using HotshotLogistics.Contracts.Repositories;
     using HotshotLogistics.Data.Repositories;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using System;
 
     /// <summary>
     /// Extension methods for configuring services.

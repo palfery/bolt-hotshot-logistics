@@ -4,9 +4,9 @@
 
 namespace HotshotLogistics.Data
 {
-    using System;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Design;
+    using System;
 
     /// <summary>
     /// Factory for creating HotshotDbContext instances at design time.

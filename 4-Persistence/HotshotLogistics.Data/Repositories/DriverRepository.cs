@@ -4,14 +4,14 @@
 
 namespace HotshotLogistics.Data.Repositories
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading;
-    using System.Threading.Tasks;
     using HotshotLogistics.Contracts.Models;
     using HotshotLogistics.Contracts.Repositories;
     using HotshotLogistics.Domain.Models;
     using Microsoft.EntityFrameworkCore;
+    using System;
+    using System.Collections.Generic;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// Repository for managing Driver entities.
@@ -26,19 +26,19 @@ namespace HotshotLogistics.Data.Repositories
         /// <param name="dbContext">The database context.</param>
         public DriverRepository(HotshotDbContext dbContext)
         {
-            this.context = dbContext;
+            context = dbContext;
         }
 
         /// <inheritdoc/>
         public async Task<IEnumerable<IDriver>> GetDriversAsync(CancellationToken cancellationToken = default)
         {
-            return await this.context.Drivers.Cast<IDriver>().ToListAsync(cancellationToken);
+            return await context.Drivers.Cast<IDriver>().ToListAsync(cancellationToken);
         }
 
         /// <inheritdoc/>
         public async Task<IDriver?> GetDriverByIdAsync(int id, CancellationToken cancellationToken = default)
         {
-            return await this.context.Drivers.FindAsync(new object[] { id }, cancellationToken) as IDriver;
+            return await context.Drivers.FindAsync(new object[] { id }, cancellationToken) as IDriver;
         }
 
         /// <inheritdoc/>
@@ -46,8 +46,8 @@ namespace HotshotLogistics.Data.Repositories
         {
             var domainDriver = (Driver)driver;
             domainDriver.CreatedAt = DateTime.UtcNow;
-            await this.context.Drivers.AddAsync(domainDriver, cancellationToken);
-            await this.context.SaveChangesAsync(cancellationToken);
+            await context.Drivers.AddAsync(domainDriver, cancellationToken);
+            await context.SaveChangesAsync(cancellationToken);
             return domainDriver;
         }
 
@@ -56,19 +56,19 @@ namespace HotshotLogistics.Data.Repositories
         {
             var domainDriver = (Driver)driver;
             domainDriver.UpdatedAt = DateTime.UtcNow;
-            this.context.Drivers.Update(domainDriver);
-            await this.context.SaveChangesAsync(cancellationToken);
+            context.Drivers.Update(domainDriver);
+            await context.SaveChangesAsync(cancellationToken);
             return domainDriver;
         }
 
         /// <inheritdoc/>
         public async Task DeleteDriverAsync(int id, CancellationToken cancellationToken = default)
         {
-            var driver = await this.context.Drivers.FindAsync(new object[] { id }, cancellationToken);
+            var driver = await context.Drivers.FindAsync(new object[] { id }, cancellationToken);
             if (driver != null)
             {
-                this.context.Drivers.Remove(driver);
-                await this.context.SaveChangesAsync(cancellationToken);
+                context.Drivers.Remove(driver);
+                await context.SaveChangesAsync(cancellationToken);
             }
         }
     }

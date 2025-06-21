@@ -1,8 +1,7 @@
-using NetArchTest.Rules;
-using Xunit;
-using HotshotLogistics.Domain.Models;
 using HotshotLogistics.Application.Services;
 using HotshotLogistics.Data.Repositories;
+using HotshotLogistics.Domain.Models;
+using NetArchTest.Rules;
 
 namespace HotshotLogistics.Tests;
 

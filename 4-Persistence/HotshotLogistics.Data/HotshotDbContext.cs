@@ -4,7 +4,6 @@
 
 namespace HotshotLogistics.Data
 {
-    using HotshotLogistics.Contracts.Models;
     using HotshotLogistics.Data.Configurations;
     using HotshotLogistics.Domain.Models;
     using Microsoft.EntityFrameworkCore;
