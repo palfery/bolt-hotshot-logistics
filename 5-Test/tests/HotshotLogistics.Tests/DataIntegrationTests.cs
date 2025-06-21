@@ -4,6 +4,7 @@
 
 namespace HotshotLogistics.Tests
 {
+
     using System;
     using System.Linq;
     using System.Threading.Tasks;
@@ -12,6 +13,7 @@ namespace HotshotLogistics.Tests
     using HotshotLogistics.Data.Repositories;
     using HotshotLogistics.Domain.Models;
     using Microsoft.EntityFrameworkCore;
+
     using Xunit;
 
     /// <summary>

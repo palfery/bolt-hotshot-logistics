@@ -10,7 +10,7 @@ namespace HotshotLogistics.Application.Services
     using HotshotLogistics.Contracts.Repositories;
     using HotshotLogistics.Contracts.Services;
 
-    /// <summary>
+  /// <summary>
     /// Service for managing drivers.
     /// </summary>
     public class DriverService : IDriverService
@@ -29,7 +29,9 @@ namespace HotshotLogistics.Application.Services
         /// <inheritdoc/>
         public Task<IDriver> CreateDriverAsync(IDriver driver)
         {
+
             return this.driverRepository.CreateDriverAsync(driver);
+
         }
 
         /// <inheritdoc/>
@@ -41,7 +43,9 @@ namespace HotshotLogistics.Application.Services
         /// <inheritdoc/>
         public Task<IEnumerable<IDriver>> GetDriversAsync()
         {
+
             return this.driverRepository.GetDriversAsync();
+
         }
     }
 }

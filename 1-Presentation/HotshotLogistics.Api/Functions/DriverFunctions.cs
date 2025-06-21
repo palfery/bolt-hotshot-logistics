@@ -4,15 +4,14 @@
 
 namespace HotshotLogistics.Api.Functions
 {
-    using System;
+
+    using HotshotLogistics.Contracts.Models;
+    using HotshotLogistics.Contracts.Services;
+    using Microsoft.Azure.Functions.Worker;
+    using Microsoft.Azure.Functions.Worker.Http;
     using System.Net;
     using System.Text.Json;
     using System.Threading.Tasks;
-    using HotshotLogistics.Contracts.Models;
-    using HotshotLogistics.Contracts.Services;
-    using HotshotLogistics.Domain.Models;
-    using Microsoft.Azure.Functions.Worker;
-    using Microsoft.Azure.Functions.Worker.Http;
 
     /// <summary>
     /// Azure Functions for managing drivers.
@@ -39,6 +38,7 @@ namespace HotshotLogistics.Api.Functions
         public async Task<HttpResponseData> GetDrivers(
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = "drivers")] HttpRequestData req)
         {
+
             var drivers = await this.driverService.GetDriversAsync();
             var response = req.CreateResponse(HttpStatusCode.OK);
             await response.WriteAsJsonAsync(drivers);
@@ -56,6 +56,7 @@ namespace HotshotLogistics.Api.Functions
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = "drivers/{id}")] HttpRequestData req,
             int id)
         {
+
             var driver = await this.driverService.GetDriverByIdAsync(id);
             if (driver == null)
             {
@@ -78,13 +79,24 @@ namespace HotshotLogistics.Api.Functions
         public async Task<HttpResponseData> CreateDriver(
             [HttpTrigger(AuthorizationLevel.Function, "post", Route = "drivers")] HttpRequestData req)
         {
-            IDriver driver = await JsonSerializer.DeserializeAsync<IDriver>(req.Body);
+            // Ensure the request body is not null before deserialization
+            if (req.Body == null)
+            {
+                var badRequestResponse = req.CreateResponse(HttpStatusCode.BadRequest);
+                await badRequestResponse.WriteStringAsync("Request body is null");
+                return badRequestResponse;
+            }
+
+            // Use nullable type for deserialization and validate the result
+            IDriver? driver = await JsonSerializer.DeserializeAsync<IDriver>(req.Body);
+
             if (driver == null)
             {
                 var badRequestResponse = req.CreateResponse(HttpStatusCode.BadRequest);
                 await badRequestResponse.WriteStringAsync("Invalid driver data");
                 return badRequestResponse;
             }
+
 
             var createdDriver = await this.driverService.CreateDriverAsync(driver);
             var response = req.CreateResponse(HttpStatusCode.Created);

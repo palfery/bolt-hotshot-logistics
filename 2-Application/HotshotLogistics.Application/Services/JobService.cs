@@ -31,13 +31,14 @@ namespace HotshotLogistics.Application.Services
         public Task<IJob> CreateJobAsync(IJob job, CancellationToken cancellationToken = default)
         {
             // Add any business logic, validation, etc., here before calling the repository
+
             return this.jobRepository.CreateJobAsync(job, cancellationToken);
         }
 
         /// <inheritdoc/>
-        public Task<IJob?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
+        public Task<IJob?> GetJobByIdAsync(string id, CancellationToken cancellationToken = default)
         {
-            return this.jobRepository.GetByIdAsync(id, cancellationToken);
+            return this.jobRepository.GetJobByIdAsync(id, cancellationToken);
         }
 
         /// <inheritdoc/>
@@ -50,6 +51,7 @@ namespace HotshotLogistics.Application.Services
         public Task<IJob?> UpdateJobAsync(string id, IJob jobDetails, CancellationToken cancellationToken = default)
         {
             // Add any business logic, validation, etc.
+
             return this.jobRepository.UpdateJobAsync(id, jobDetails, cancellationToken);
         }
 

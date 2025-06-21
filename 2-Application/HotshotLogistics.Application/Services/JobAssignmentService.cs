@@ -4,6 +4,7 @@
 
 namespace HotshotLogistics.Application.Services
 {
+
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -97,7 +98,8 @@ namespace HotshotLogistics.Application.Services
             }
 
             // Verify job exists
-            var job = await this.jobRepository.GetByIdAsync(jobId, cancellationToken);
+            var job = await this.jobRepository.GetJobByIdAsync(jobId, cancellationToken);
+
             if (job == null)
             {
                 throw new KeyNotFoundException($"Job with ID {jobId} not found.");
@@ -143,6 +145,7 @@ namespace HotshotLogistics.Application.Services
 
             assignment.Status = status;
             return await this.assignmentRepository.UpdateAsync(assignment, cancellationToken);
+
         }
 
         /// <inheritdoc/>
@@ -154,6 +157,7 @@ namespace HotshotLogistics.Application.Services
             }
 
             return await this.assignmentRepository.DeleteAsync(id, cancellationToken);
+
         }
     }
 }

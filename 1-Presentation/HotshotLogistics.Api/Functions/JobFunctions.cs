@@ -60,6 +60,7 @@ namespace HotshotLogistics.Api.Functions
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = "jobs/{id}")] HttpRequestData req,
             string id)
         {
+
             var job = await this.jobService.GetJobByIdAsync(id);
             if (job == null)
             {
@@ -83,6 +84,7 @@ namespace HotshotLogistics.Api.Functions
             [HttpTrigger(AuthorizationLevel.Function, "post", Route = "jobs")] HttpRequestData req)
         {
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+
             var jobDto = JsonSerializer.Deserialize<JobDto>(requestBody, this.jsonSerializerOptions);
 
             if (jobDto == null) // Basic validation
@@ -93,6 +95,7 @@ namespace HotshotLogistics.Api.Functions
             }
 
             // Add more specific validation as needed (e.g., required fields)
+
 
             var createdJob = await this.jobService.CreateJobAsync(jobDto);
             var response = req.CreateResponse(HttpStatusCode.Created);
@@ -113,13 +116,13 @@ namespace HotshotLogistics.Api.Functions
         {
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             var jobDto = JsonSerializer.Deserialize<JobDto>(requestBody, this.jsonSerializerOptions);
-
             if (jobDto == null)
             {
                 var badRequestResponse = req.CreateResponse(HttpStatusCode.BadRequest);
                 await badRequestResponse.WriteStringAsync("Invalid job data provided.");
                 return badRequestResponse;
             }
+
 
             var updatedJob = await this.jobService.UpdateJobAsync(id, jobDto);
             if (updatedJob == null)
@@ -145,6 +148,7 @@ namespace HotshotLogistics.Api.Functions
             [HttpTrigger(AuthorizationLevel.Function, "delete", Route = "jobs/{id}")] HttpRequestData req,
             string id)
         {
+
             var success = await this.jobService.DeleteJobAsync(id);
             if (!success)
             {

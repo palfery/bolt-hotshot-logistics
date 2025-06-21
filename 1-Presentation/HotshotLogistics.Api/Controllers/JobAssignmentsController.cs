@@ -4,14 +4,17 @@
 
 namespace HotshotLogistics.Api.Controllers
 {
+    using HotshotLogistics.Contracts.Models;
+    using HotshotLogistics.Contracts.Services;
+    using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Logging;
+
     using System;
     using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
-    using HotshotLogistics.Contracts.Models;
-    using HotshotLogistics.Contracts.Services;
-    using Microsoft.AspNetCore.Mvc;
-    using Microsoft.Extensions.Logging;
+
 
     /// <summary>
     /// API controller for managing job assignments.
@@ -47,13 +50,15 @@ namespace HotshotLogistics.Api.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<JobAssignmentDto>> GetById(string id, CancellationToken cancellationToken = default)
         {
-            var assignment = await this.assignmentService.GetByIdAsync(id, cancellationToken);
+
+            var assignment = await assignmentService.GetByIdAsync(id, cancellationToken);
             if (assignment == null)
             {
-                return this.NotFound();
+                return NotFound();
             }
 
-            return this.Ok(assignment);
+            return Ok(assignment);
+
         }
 
         /// <summary>
@@ -65,8 +70,8 @@ namespace HotshotLogistics.Api.Controllers
         [ProducesResponseType(typeof(IEnumerable<JobAssignmentDto>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<JobAssignmentDto>>> GetAll(CancellationToken cancellationToken = default)
         {
-            var assignments = await this.assignmentService.GetAllAsync(cancellationToken);
-            return this.Ok(assignments);
+            var assignments = await assignmentService.GetAllAsync(cancellationToken);
+            return Ok(assignments);
         }
 
         /// <summary>
@@ -106,6 +111,7 @@ namespace HotshotLogistics.Api.Controllers
         [ProducesResponseType(typeof(IEnumerable<JobAssignmentDto>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<JobAssignmentDto>>> GetActive(CancellationToken cancellationToken = default)
         {
+
             var assignments = await this.assignmentService.GetActiveAssignmentsAsync(cancellationToken);
             return this.Ok(assignments);
         }
@@ -139,6 +145,7 @@ namespace HotshotLogistics.Api.Controllers
             }
             catch (KeyNotFoundException ex)
             {
+
                 this.logger.LogWarning(ex, "Failed to assign job: {Message}", ex.Message);
                 return this.NotFound(ex.Message);
             }
@@ -172,6 +179,7 @@ namespace HotshotLogistics.Api.Controllers
         {
             try
             {
+
                 var assignment = await this.assignmentService.UpdateAssignmentStatusAsync(id, status, cancellationToken);
                 return this.Ok(assignment);
             }
@@ -223,4 +231,20 @@ namespace HotshotLogistics.Api.Controllers
         /// </summary>
         public int DriverId { get; set; }
     }
+}
+
+/// <summary>
+/// Request model for assigning a job to a driver.
+/// </summary>
+public class AssignJobRequest
+{
+    /// <summary>
+    /// Gets or sets the job ID.
+    /// </summary>
+    public string JobId { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Gets or sets the driver ID.
+    /// </summary>
+    public int DriverId { get; set; }
 }
