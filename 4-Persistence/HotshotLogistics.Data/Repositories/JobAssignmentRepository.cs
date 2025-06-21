@@ -1,5 +1,13 @@
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using HotshotLogistics.Contracts.Models;
 using HotshotLogistics.Contracts.Repositories;
+using HotshotLogistics.Data;
+using HotshotLogistics.Data.Configurations;
 using HotshotLogistics.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 

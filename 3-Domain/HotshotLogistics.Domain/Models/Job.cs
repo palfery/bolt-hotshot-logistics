@@ -4,8 +4,8 @@
 
 namespace HotshotLogistics.Domain.Models
 {
-    using HotshotLogistics.Contracts.Models;
     using System;
+    using HotshotLogistics.Contracts.Models;
 
     /// <summary>
     /// Represents a job in the logistics system.

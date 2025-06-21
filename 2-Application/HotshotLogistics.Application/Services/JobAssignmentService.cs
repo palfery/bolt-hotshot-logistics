@@ -4,14 +4,15 @@
 
 namespace HotshotLogistics.Application.Services
 {
-    using HotshotLogistics.Contracts.Models;
-    using HotshotLogistics.Contracts.Repositories;
-    using HotshotLogistics.Contracts.Services;
+
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
+    using HotshotLogistics.Contracts.Models;
+    using HotshotLogistics.Contracts.Repositories;
+    using HotshotLogistics.Contracts.Services;
 
     /// <summary>
     /// Service implementation for job assignment operations.
@@ -46,13 +47,13 @@ namespace HotshotLogistics.Application.Services
                 throw new ArgumentException("Assignment ID cannot be empty.", nameof(id));
             }
 
-            return await assignmentRepository.GetByIdAsync(id, cancellationToken);
+            return await this.assignmentRepository.GetByIdAsync(id, cancellationToken);
         }
 
         /// <inheritdoc/>
         public async Task<IEnumerable<JobAssignmentDto>> GetAllAsync(CancellationToken cancellationToken = default)
         {
-            return await assignmentRepository.GetAllAsync(cancellationToken);
+            return await this.assignmentRepository.GetAllAsync(cancellationToken);
         }
 
         /// <inheritdoc/>
@@ -63,7 +64,7 @@ namespace HotshotLogistics.Application.Services
                 throw new ArgumentException("Driver ID must be greater than zero.", nameof(driverId));
             }
 
-            return await assignmentRepository.GetByDriverIdAsync(driverId, cancellationToken);
+            return await this.assignmentRepository.GetByDriverIdAsync(driverId, cancellationToken);
         }
 
         /// <inheritdoc/>
@@ -74,13 +75,13 @@ namespace HotshotLogistics.Application.Services
                 throw new ArgumentException("Job ID cannot be empty.", nameof(jobId));
             }
 
-            return await assignmentRepository.GetByJobIdAsync(jobId, cancellationToken);
+            return await this.assignmentRepository.GetByJobIdAsync(jobId, cancellationToken);
         }
 
         /// <inheritdoc/>
         public async Task<IEnumerable<JobAssignmentDto>> GetActiveAssignmentsAsync(CancellationToken cancellationToken = default)
         {
-            return await assignmentRepository.GetActiveAssignmentsAsync(cancellationToken);
+            return await this.assignmentRepository.GetActiveAssignmentsAsync(cancellationToken);
         }
 
         /// <inheritdoc/>
@@ -97,21 +98,22 @@ namespace HotshotLogistics.Application.Services
             }
 
             // Verify job exists
-            var job = await jobRepository.GetJobByIdAsync(jobId, cancellationToken);
+            var job = await this.jobRepository.GetByIdAsync(jobId, cancellationToken);
+
             if (job == null)
             {
                 throw new KeyNotFoundException($"Job with ID {jobId} not found.");
             }
 
             // Verify driver exists
-            var driver = await driverRepository.GetDriverByIdAsync(driverId, cancellationToken);
+            var driver = await this.driverRepository.GetDriverByIdAsync(driverId, cancellationToken);
             if (driver == null)
             {
                 throw new KeyNotFoundException($"Driver with ID {driverId} not found.");
             }
 
             // Check if assignment already exists
-            var existingAssignments = await assignmentRepository.GetByJobIdAsync(jobId, cancellationToken);
+            var existingAssignments = await this.assignmentRepository.GetByJobIdAsync(jobId, cancellationToken);
             var activeAssignment = existingAssignments.FirstOrDefault(a => a.Status == JobAssignmentStatus.Active);
 
             if (activeAssignment != null)
@@ -127,7 +129,7 @@ namespace HotshotLogistics.Application.Services
                 Status = JobAssignmentStatus.Active
             };
 
-            return await assignmentRepository.CreateAsync(assignment, cancellationToken);
+            return await this.assignmentRepository.CreateAsync(assignment, cancellationToken);
         }
 
         /// <inheritdoc/>
@@ -138,11 +140,12 @@ namespace HotshotLogistics.Application.Services
                 throw new ArgumentException("Assignment ID cannot be empty.", nameof(id));
             }
 
-            var assignment = await assignmentRepository.GetByIdAsync(id, cancellationToken)
+            var assignment = await this.assignmentRepository.GetByIdAsync(id, cancellationToken)
                 ?? throw new KeyNotFoundException($"Assignment with ID {id} not found.");
 
             assignment.Status = status;
-            return await assignmentRepository.UpdateAsync(assignment, cancellationToken);
+            return await this.assignmentRepository.UpdateAsync(assignment, cancellationToken);
+
         }
 
         /// <inheritdoc/>
@@ -153,7 +156,8 @@ namespace HotshotLogistics.Application.Services
                 throw new ArgumentException("Assignment ID cannot be empty.", nameof(id));
             }
 
-            return await assignmentRepository.DeleteAsync(id, cancellationToken);
+            return await this.assignmentRepository.DeleteAsync(id, cancellationToken);
+
         }
     }
 }

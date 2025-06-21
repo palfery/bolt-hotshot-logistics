@@ -4,6 +4,9 @@
 
 namespace HotshotLogistics.Api
 {
+    using System;
+    using System.IO;
+    using System.Text.Json;
     using Azure.Identity;
     using HotshotLogistics.Application;
     using HotshotLogistics.Data;
@@ -11,9 +14,6 @@ namespace HotshotLogistics.Api
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
-    using System;
-    using System.IO;
-    using System.Text.Json;
 
     /// <summary>
     /// The main program class.

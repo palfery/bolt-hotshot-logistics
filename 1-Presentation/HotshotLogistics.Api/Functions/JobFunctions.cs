@@ -4,14 +4,15 @@
 
 namespace HotshotLogistics.Api.Functions
 {
-    using HotshotLogistics.Contracts.Models;
-    using HotshotLogistics.Contracts.Services;
-    using Microsoft.Azure.Functions.Worker;
-    using Microsoft.Azure.Functions.Worker.Http;
+    using System;
     using System.IO;
     using System.Net;
     using System.Text.Json;
     using System.Threading.Tasks;
+    using HotshotLogistics.Contracts.Models;
+    using HotshotLogistics.Contracts.Services;
+    using Microsoft.Azure.Functions.Worker;
+    using Microsoft.Azure.Functions.Worker.Http;
 
     /// <summary>
     /// Azure Functions for managing jobs.
@@ -42,7 +43,7 @@ namespace HotshotLogistics.Api.Functions
         public async Task<HttpResponseData> GetJobs(
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = "jobs")] HttpRequestData req)
         {
-            var jobs = await jobService.GetJobsAsync();
+            var jobs = await this.jobService.GetJobsAsync();
             var response = req.CreateResponse(HttpStatusCode.OK);
             await response.WriteAsJsonAsync(jobs);
             return response;
@@ -59,7 +60,8 @@ namespace HotshotLogistics.Api.Functions
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = "jobs/{id}")] HttpRequestData req,
             string id)
         {
-            var job = await jobService.GetJobByIdAsync(id);
+
+            var job = await this.jobService.GetJobByIdAsync(id);
             if (job == null)
             {
                 var notFoundResponse = req.CreateResponse(HttpStatusCode.NotFound);
@@ -82,7 +84,8 @@ namespace HotshotLogistics.Api.Functions
             [HttpTrigger(AuthorizationLevel.Function, "post", Route = "jobs")] HttpRequestData req)
         {
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            var jobDto = JsonSerializer.Deserialize<JobDto>(requestBody, jsonSerializerOptions);
+
+            var jobDto = JsonSerializer.Deserialize<JobDto>(requestBody, this.jsonSerializerOptions);
 
             if (jobDto == null) // Basic validation
             {
@@ -93,7 +96,8 @@ namespace HotshotLogistics.Api.Functions
 
             // Add more specific validation as needed (e.g., required fields)
 
-            var createdJob = await jobService.CreateJobAsync(jobDto);
+
+            var createdJob = await this.jobService.CreateJobAsync(jobDto);
             var response = req.CreateResponse(HttpStatusCode.Created);
             await response.WriteAsJsonAsync(createdJob);
             return response;
@@ -111,8 +115,7 @@ namespace HotshotLogistics.Api.Functions
             string id)
         {
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            var jobDto = JsonSerializer.Deserialize<JobDto>(requestBody, jsonSerializerOptions);
-
+            var jobDto = JsonSerializer.Deserialize<JobDto>(requestBody, this.jsonSerializerOptions);
             if (jobDto == null)
             {
                 var badRequestResponse = req.CreateResponse(HttpStatusCode.BadRequest);
@@ -120,7 +123,8 @@ namespace HotshotLogistics.Api.Functions
                 return badRequestResponse;
             }
 
-            var updatedJob = await jobService.UpdateJobAsync(id, jobDto);
+
+            var updatedJob = await this.jobService.UpdateJobAsync(id, jobDto);
             if (updatedJob == null)
             {
                 var notFoundResponse = req.CreateResponse(HttpStatusCode.NotFound);
@@ -144,7 +148,8 @@ namespace HotshotLogistics.Api.Functions
             [HttpTrigger(AuthorizationLevel.Function, "delete", Route = "jobs/{id}")] HttpRequestData req,
             string id)
         {
-            var success = await jobService.DeleteJobAsync(id);
+
+            var success = await this.jobService.DeleteJobAsync(id);
             if (!success)
             {
                 var notFoundResponse = req.CreateResponse(HttpStatusCode.NotFound);

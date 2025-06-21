@@ -4,6 +4,7 @@
 
 namespace HotshotLogistics.Api.Functions
 {
+
     using HotshotLogistics.Contracts.Models;
     using HotshotLogistics.Contracts.Services;
     using Microsoft.Azure.Functions.Worker;
@@ -37,7 +38,8 @@ namespace HotshotLogistics.Api.Functions
         public async Task<HttpResponseData> GetDrivers(
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = "drivers")] HttpRequestData req)
         {
-            var drivers = await driverService.GetDriversAsync();
+
+            var drivers = await this.driverService.GetDriversAsync();
             var response = req.CreateResponse(HttpStatusCode.OK);
             await response.WriteAsJsonAsync(drivers);
             return response;
@@ -54,7 +56,8 @@ namespace HotshotLogistics.Api.Functions
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = "drivers/{id}")] HttpRequestData req,
             int id)
         {
-            var driver = await driverService.GetDriverByIdAsync(id);
+
+            var driver = await this.driverService.GetDriverByIdAsync(id);
             if (driver == null)
             {
                 var notFoundResponse = req.CreateResponse(HttpStatusCode.NotFound);
@@ -86,6 +89,7 @@ namespace HotshotLogistics.Api.Functions
 
             // Use nullable type for deserialization and validate the result
             IDriver? driver = await JsonSerializer.DeserializeAsync<IDriver>(req.Body);
+
             if (driver == null)
             {
                 var badRequestResponse = req.CreateResponse(HttpStatusCode.BadRequest);
@@ -93,7 +97,8 @@ namespace HotshotLogistics.Api.Functions
                 return badRequestResponse;
             }
 
-            var createdDriver = await driverService.CreateDriverAsync(driver);
+
+            var createdDriver = await this.driverService.CreateDriverAsync(driver);
             var response = req.CreateResponse(HttpStatusCode.Created);
             await response.WriteAsJsonAsync(createdDriver);
             return response;
