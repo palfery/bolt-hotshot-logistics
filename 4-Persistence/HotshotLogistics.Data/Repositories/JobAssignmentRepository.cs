@@ -1,8 +1,14 @@
-using Microsoft.EntityFrameworkCore;
-using HotshotLogistics.Contracts.Repositories;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using HotshotLogistics.Contracts.Models;
+using HotshotLogistics.Contracts.Repositories;
 using HotshotLogistics.Data;
+using HotshotLogistics.Data.Configurations;
 using HotshotLogistics.Domain.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace HotshotLogistics.Data.Repositories;
 
@@ -84,7 +90,9 @@ internal class JobAssignmentRepository : IJobAssignmentRepository
     public async Task<JobAssignmentDto> CreateAsync(JobAssignmentDto jobAssignment, CancellationToken cancellationToken = default)
     {
         if (jobAssignment == null)
+        {
             throw new ArgumentNullException(nameof(jobAssignment));
+        }
 
         var entity = new JobAssignment
         {
@@ -92,7 +100,7 @@ internal class JobAssignmentRepository : IJobAssignmentRepository
             DriverId = jobAssignment.DriverId,
             AssignedAt = jobAssignment.AssignedAt,
             Status = jobAssignment.Status,
-            UpdatedAt = DateTime.UtcNow
+            UpdatedAt = DateTime.UtcNow,
         };
 
         _context.JobAssignments.Add(entity);
@@ -106,11 +114,13 @@ internal class JobAssignmentRepository : IJobAssignmentRepository
     public async Task<JobAssignmentDto> UpdateAsync(JobAssignmentDto jobAssignment, CancellationToken cancellationToken = default)
     {
         if (jobAssignment == null)
+        {
             throw new ArgumentNullException(nameof(jobAssignment));
+        }
 
         var existing = await _context.JobAssignments
             .FirstOrDefaultAsync(a => a.Id == jobAssignment.Id, cancellationToken)
-                ?? throw new KeyNotFoundException($"Job assignment with ID {jobAssignment.Id} not found.");
+            ?? throw new KeyNotFoundException($"Job assignment with ID {jobAssignment.Id} not found.");
 
         existing.JobId = jobAssignment.JobId;
         existing.DriverId = jobAssignment.DriverId;
@@ -131,7 +141,9 @@ internal class JobAssignmentRepository : IJobAssignmentRepository
             .FirstOrDefaultAsync(a => a.Id == id, cancellationToken);
 
         if (assignment == null)
+        {
             return false;
+        }
 
         _context.JobAssignments.Remove(assignment);
         await _context.SaveChangesAsync(cancellationToken);
@@ -141,7 +153,9 @@ internal class JobAssignmentRepository : IJobAssignmentRepository
     private static JobAssignmentDto? MapToDto(JobAssignment? assignment)
     {
         if (assignment == null)
+        {
             return null;
+        }
 
         return new JobAssignmentDto
         {
@@ -150,29 +164,33 @@ internal class JobAssignmentRepository : IJobAssignmentRepository
             DriverId = assignment.DriverId,
             AssignedAt = assignment.AssignedAt,
             Status = assignment.Status,
-            Driver = assignment.Driver != null ? new DriverDto
-            {
-                Id = assignment.Driver.Id,
-                FirstName = assignment.Driver.FirstName,
-                LastName = assignment.Driver.LastName,
-                Email = assignment.Driver.Email,
-                PhoneNumber = assignment.Driver.PhoneNumber,
-                LicenseNumber = assignment.Driver.LicenseNumber,
-                LicenseExpiryDate = assignment.Driver.LicenseExpiryDate
-            } : null,
-            Job = assignment.Job != null ? new JobDto
-            {
-                Id = assignment.Job.Id,
-                Title = assignment.Job.Title,
-                PickupAddress = assignment.Job.PickupAddress,
-                DropoffAddress = assignment.Job.DropoffAddress,
-                Status = assignment.Job.Status,
-                Priority = assignment.Job.Priority,
-                Amount = assignment.Job.Amount,
-                EstimatedDeliveryTime = assignment.Job.EstimatedDeliveryTime,
-                CreatedAt = assignment.Job.CreatedAt,
-                UpdatedAt = assignment.Job.UpdatedAt
-            } : null
+            Driver = assignment.Driver != null
+                ? new DriverDto
+                {
+                    Id = assignment.Driver.Id,
+                    FirstName = assignment.Driver.FirstName,
+                    LastName = assignment.Driver.LastName,
+                    Email = assignment.Driver.Email,
+                    PhoneNumber = assignment.Driver.PhoneNumber,
+                    LicenseNumber = assignment.Driver.LicenseNumber,
+                    LicenseExpiryDate = assignment.Driver.LicenseExpiryDate,
+                }
+                : null,
+            Job = assignment.Job != null
+                ? new JobDto
+                {
+                    Id = assignment.Job.Id,
+                    Title = assignment.Job.Title,
+                    PickupAddress = assignment.Job.PickupAddress,
+                    DropoffAddress = assignment.Job.DropoffAddress,
+                    Status = assignment.Job.Status,
+                    Priority = assignment.Job.Priority,
+                    Amount = assignment.Job.Amount,
+                    EstimatedDeliveryTime = assignment.Job.EstimatedDeliveryTime,
+                    CreatedAt = assignment.Job.CreatedAt,
+                    UpdatedAt = assignment.Job.UpdatedAt,
+                }
+                : null,
         };
     }
 }

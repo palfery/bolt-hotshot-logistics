@@ -7,12 +7,12 @@ namespace HotshotLogistics.Data.Repositories
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading;
     using System.Threading.Tasks;
     using HotshotLogistics.Contracts.Models;
     using HotshotLogistics.Contracts.Repositories;
     using HotshotLogistics.Domain.Models;
     using Microsoft.EntityFrameworkCore;
-    using System.Threading;
 
     /// <summary>
     /// Repository for managing Job entities.
@@ -39,7 +39,7 @@ namespace HotshotLogistics.Data.Repositories
         }
 
         /// <inheritdoc/>
-        public async Task<Job> GetByIdAsync(string id)
+        public async Task<Job?> GetByIdAsync(string id)
         {
             return await this.dbContext.Jobs
                 .Include(j => j.AssignedDriver)
@@ -105,34 +105,38 @@ namespace HotshotLogistics.Data.Repositories
                 EstimatedDeliveryTime = job.EstimatedDeliveryTime,
                 AssignedDriverId = job.AssignedDriverId,
                 CreatedAt = job.CreatedAt,
-                UpdatedAt = job.UpdatedAt
+                UpdatedAt = job.UpdatedAt,
             };
         }
 
+        /// <inheritdoc/>
         public async Task<IJob?> GetJobByIdAsync(string id)
         {
             var job = await this.dbContext.Jobs
                                      .AsNoTracking()
                                      .FirstOrDefaultAsync(j => j.Id == id);
-            return job as IJob;
+            return job;
         }
 
+        /// <inheritdoc/>
         public async Task<IEnumerable<IJob>> GetJobsAsync(CancellationToken cancellationToken = default)
         {
             var jobs = await this.dbContext.Jobs
                                       .AsNoTracking()
                                       .ToListAsync(cancellationToken);
-            return jobs.Cast<IJob>();
+            return jobs;
         }
 
+        /// <inheritdoc/>
         public async Task<IJob?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
         {
             var job = await this.dbContext.Jobs
                                      .AsNoTracking()
                                      .FirstOrDefaultAsync(j => j.Id == id, cancellationToken);
-            return job as IJob;
+            return job;
         }
 
+        /// <inheritdoc/>
         public async Task<IJob?> UpdateJobAsync(string id, IJob jobDetails, CancellationToken cancellationToken = default)
         {
             var job = await this.dbContext.Jobs.FindAsync(new object[] { id }, cancellationToken);
@@ -153,9 +157,10 @@ namespace HotshotLogistics.Data.Repositories
 
             this.dbContext.Jobs.Update(job);
             await this.dbContext.SaveChangesAsync(cancellationToken);
-            return job as IJob;
+            return job;
         }
 
+        /// <inheritdoc/>
         public async Task<bool> DeleteJobAsync(string id, CancellationToken cancellationToken = default)
         {
             var job = await this.dbContext.Jobs.FindAsync(new object[] { id }, cancellationToken);

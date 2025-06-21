@@ -1,6 +1,7 @@
+using System;
+using HotshotLogistics.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using HotshotLogistics.Domain.Models;
 
 namespace HotshotLogistics.Data.Configurations;
 
@@ -9,6 +10,8 @@ namespace HotshotLogistics.Data.Configurations;
 /// </summary>
 public class JobAssignmentConfiguration : IEntityTypeConfiguration<JobAssignment>
 {
+    private const int GuidStringLength = 36;
+
     /// <inheritdoc/>
     public void Configure(EntityTypeBuilder<JobAssignment> builder)
     {

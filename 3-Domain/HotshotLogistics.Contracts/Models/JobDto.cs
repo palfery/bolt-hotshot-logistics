@@ -1,18 +1,69 @@
-using System;
+// <copyright file="JobDto.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
-namespace HotshotLogistics.Contracts.Models;
-
-public class JobDto : IJob
+namespace HotshotLogistics.Contracts.Models
 {
-    public string Id { get; set; } = string.Empty;
-    public string Title { get; set; } = string.Empty;
-    public string PickupAddress { get; set; } = string.Empty;
-    public string DropoffAddress { get; set; } = string.Empty;
-    public JobStatus Status { get; set; }
-    public JobPriority Priority { get; set; }
-    public decimal Amount { get; set; }
-    public string EstimatedDeliveryTime { get; set; } = string.Empty;
-    public int? AssignedDriverId { get; set; }
-    public DateTime CreatedAt { get; set; }
-    public DateTime? UpdatedAt { get; set; }
+    using System;
+
+    /// <summary>
+    /// Data transfer object for job information.
+    /// </summary>
+    public class JobDto : IJob
+    {
+        /// <summary>
+        /// Gets or sets the unique identifier for the job.
+        /// </summary>
+        public string Id { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Gets or sets the title of the job.
+        /// </summary>
+        public string Title { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Gets or sets the pickup address for the job.
+        /// </summary>
+        public string PickupAddress { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Gets or sets the dropoff address for the job.
+        /// </summary>
+        public string DropoffAddress { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Gets or sets the current status of the job.
+        /// </summary>
+        public JobStatus Status { get; set; }
+
+        /// <summary>
+        /// Gets or sets the priority level of the job.
+        /// </summary>
+        public JobPriority Priority { get; set; }
+
+        /// <summary>
+        /// Gets or sets the monetary amount for the job.
+        /// </summary>
+        public decimal Amount { get; set; }
+
+        /// <summary>
+        /// Gets or sets the estimated delivery time for the job.
+        /// </summary>
+        public string EstimatedDeliveryTime { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Gets or sets the ID of the assigned driver.
+        /// </summary>
+        public int? AssignedDriverId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the creation timestamp of the job.
+        /// </summary>
+        public DateTime CreatedAt { get; set; }
+
+        /// <summary>
+        /// Gets or sets the last update timestamp of the job.
+        /// </summary>
+        public DateTime? UpdatedAt { get; set; }
+    }
 }
