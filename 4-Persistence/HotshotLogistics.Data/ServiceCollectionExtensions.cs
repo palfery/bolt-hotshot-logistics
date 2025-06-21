@@ -2,15 +2,15 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
+using System;
+using HotshotLogistics.Contracts.Repositories;
+using HotshotLogistics.Data.Repositories;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+
 namespace HotshotLogistics.Data
 {
-    using HotshotLogistics.Contracts.Repositories;
-    using HotshotLogistics.Data.Repositories;
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.DependencyInjection;
-    using System;
-
     /// <summary>
     /// Extension methods for configuring services.
     /// </summary>

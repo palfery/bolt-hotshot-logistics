@@ -42,6 +42,9 @@
         "indentationSize": 4,
         "useTabs": false
       }
+    },
+    "suppressionRules": {
+      "suppressSA1009": true
     }
   }
 } 
