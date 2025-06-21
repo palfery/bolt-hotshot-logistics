@@ -2,17 +2,18 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using HotshotLogistics.Contracts.Models;
+using HotshotLogistics.Contracts.Repositories;
+using HotshotLogistics.Domain.Models;
+using Microsoft.EntityFrameworkCore;
+
 namespace HotshotLogistics.Data.Repositories
 {
-    using HotshotLogistics.Contracts.Models;
-    using HotshotLogistics.Contracts.Repositories;
-    using HotshotLogistics.Domain.Models;
-    using Microsoft.EntityFrameworkCore;
-    using System;
-    using System.Collections.Generic;
-    using System.Threading;
-    using System.Threading.Tasks;
-
     /// <summary>
     /// Repository for managing Job entities.
     /// </summary>
