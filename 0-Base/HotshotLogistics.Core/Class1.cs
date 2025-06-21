@@ -1,4 +1,4 @@
-﻿namespace HotshotLogistics.Core;
+namespace HotshotLogistics.Core;
 
 public class Class1
 {

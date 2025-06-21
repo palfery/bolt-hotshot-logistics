@@ -1,119 +1,159 @@
-using System.Net;
-using Microsoft.Azure.Functions.Worker;
-using Microsoft.Azure.Functions.Worker.Http;
-using System.Text.Json;
-using HotshotLogistics.Contracts.Services;
-using HotshotLogistics.Contracts.Models; // For IJob and JobDto
-using System.Threading.Tasks;
-using System.IO; // For StreamReader
+// <copyright file="JobFunctions.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
-namespace HotshotLogistics.Api.Functions;
-
-public class JobFunctions
+namespace HotshotLogistics.Api.Functions
 {
-    private readonly IJobService _jobService;
-    private readonly JsonSerializerOptions _jsonSerializerOptions = new JsonSerializerOptions
-    {
-        PropertyNameCaseInsensitive = true,
-    };
+    using System;
+    using System.IO;
+    using System.Net;
+    using System.Text.Json;
+    using System.Threading.Tasks;
+    using HotshotLogistics.Contracts.Models;
+    using HotshotLogistics.Contracts.Services;
+    using Microsoft.Azure.Functions.Worker;
+    using Microsoft.Azure.Functions.Worker.Http;
 
-
-    public JobFunctions(IJobService jobService)
+    /// <summary>
+    /// Azure Functions for managing jobs.
+    /// </summary>
+    public class JobFunctions
     {
-        _jobService = jobService;
-    }
-
-    [Function("GetJobs")]
-    public async Task<HttpResponseData> GetJobs(
-        [HttpTrigger(AuthorizationLevel.Function, "get", Route = "jobs")] HttpRequestData req)
-    {
-        var jobs = await _jobService.GetJobsAsync();
-        var response = req.CreateResponse(HttpStatusCode.OK);
-        await response.WriteAsJsonAsync(jobs);
-        return response;
-    }
-
-    [Function("GetJobById")]
-    public async Task<HttpResponseData> GetJobById(
-        [HttpTrigger(AuthorizationLevel.Function, "get", Route = "jobs/{id}")] HttpRequestData req,
-        string id)
-    {
-        var job = await _jobService.GetJobByIdAsync(id);
-        if (job == null)
+        private readonly IJobService jobService;
+        private readonly JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions
         {
-            var notFoundResponse = req.CreateResponse(HttpStatusCode.NotFound);
-            await notFoundResponse.WriteStringAsync($"Job with ID {id} not found");
-            return notFoundResponse;
+            PropertyNameCaseInsensitive = true,
+        };
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="JobFunctions"/> class.
+        /// </summary>
+        /// <param name="jobService">The job service.</param>
+        public JobFunctions(IJobService jobService)
+        {
+            this.jobService = jobService;
         }
 
-        var response = req.CreateResponse(HttpStatusCode.OK);
-        await response.WriteAsJsonAsync(job);
-        return response;
-    }
-
-    [Function("CreateJob")]
-    public async Task<HttpResponseData> CreateJob(
-        [HttpTrigger(AuthorizationLevel.Function, "post", Route = "jobs")] HttpRequestData req)
-    {
-        string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-        var jobDto = JsonSerializer.Deserialize<JobDto>(requestBody, _jsonSerializerOptions);
-
-        if (jobDto == null) // Basic validation
+        /// <summary>
+        /// Gets all jobs.
+        /// </summary>
+        /// <param name="req">The HTTP request.</param>
+        /// <returns>The HTTP response containing the jobs.</returns>
+        [Function("GetJobs")]
+        public async Task<HttpResponseData> GetJobs(
+            [HttpTrigger(AuthorizationLevel.Function, "get", Route = "jobs")] HttpRequestData req)
         {
-            var badRequestResponse = req.CreateResponse(HttpStatusCode.BadRequest);
-            await badRequestResponse.WriteStringAsync("Invalid job data provided.");
-            return badRequestResponse;
+            var jobs = await this.jobService.GetJobsAsync();
+            var response = req.CreateResponse(HttpStatusCode.OK);
+            await response.WriteAsJsonAsync(jobs);
+            return response;
         }
 
-        // Add more specific validation as needed (e.g., required fields)
-
-        var createdJob = await _jobService.CreateJobAsync(jobDto);
-        var response = req.CreateResponse(HttpStatusCode.Created);
-        await response.WriteAsJsonAsync(createdJob);
-        return response;
-    }
-
-    [Function("UpdateJob")]
-    public async Task<HttpResponseData> UpdateJob(
-        [HttpTrigger(AuthorizationLevel.Function, "put", Route = "jobs/{id}")] HttpRequestData req,
-        string id)
-    {
-        string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-        var jobDto = JsonSerializer.Deserialize<JobDto>(requestBody, _jsonSerializerOptions);
-
-        if (jobDto == null)
+        /// <summary>
+        /// Gets a job by ID.
+        /// </summary>
+        /// <param name="req">The HTTP request.</param>
+        /// <param name="id">The job ID.</param>
+        /// <returns>The HTTP response containing the job.</returns>
+        [Function("GetJobById")]
+        public async Task<HttpResponseData> GetJobById(
+            [HttpTrigger(AuthorizationLevel.Function, "get", Route = "jobs/{id}")] HttpRequestData req,
+            string id)
         {
-            var badRequestResponse = req.CreateResponse(HttpStatusCode.BadRequest);
-            await badRequestResponse.WriteStringAsync("Invalid job data provided.");
-            return badRequestResponse;
+            var job = await this.jobService.GetJobByIdAsync(id);
+            if (job == null)
+            {
+                var notFoundResponse = req.CreateResponse(HttpStatusCode.NotFound);
+                await notFoundResponse.WriteStringAsync($"Job with ID {id} not found");
+                return notFoundResponse;
+            }
+
+            var response = req.CreateResponse(HttpStatusCode.OK);
+            await response.WriteAsJsonAsync(job);
+            return response;
         }
 
-        var updatedJob = await _jobService.UpdateJobAsync(id, jobDto);
-        if (updatedJob == null)
+        /// <summary>
+        /// Creates a new job.
+        /// </summary>
+        /// <param name="req">The HTTP request.</param>
+        /// <returns>The HTTP response containing the created job.</returns>
+        [Function("CreateJob")]
+        public async Task<HttpResponseData> CreateJob(
+            [HttpTrigger(AuthorizationLevel.Function, "post", Route = "jobs")] HttpRequestData req)
         {
-            var notFoundResponse = req.CreateResponse(HttpStatusCode.NotFound);
-            await notFoundResponse.WriteStringAsync($"Job with ID {id} not found for update.");
-            return notFoundResponse;
+            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+            var jobDto = JsonSerializer.Deserialize<JobDto>(requestBody, this.jsonSerializerOptions);
+
+            if (jobDto == null) // Basic validation
+            {
+                var badRequestResponse = req.CreateResponse(HttpStatusCode.BadRequest);
+                await badRequestResponse.WriteStringAsync("Invalid job data provided.");
+                return badRequestResponse;
+            }
+
+            // Add more specific validation as needed (e.g., required fields)
+
+            var createdJob = await this.jobService.CreateJobAsync(jobDto);
+            var response = req.CreateResponse(HttpStatusCode.Created);
+            await response.WriteAsJsonAsync(createdJob);
+            return response;
         }
 
-        var response = req.CreateResponse(HttpStatusCode.OK);
-        await response.WriteAsJsonAsync(updatedJob);
-        return response;
-    }
-
-    [Function("DeleteJob")]
-    public async Task<HttpResponseData> DeleteJob(
-        [HttpTrigger(AuthorizationLevel.Function, "delete", Route = "jobs/{id}")] HttpRequestData req,
-        string id)
-    {
-        var success = await _jobService.DeleteJobAsync(id);
-        if (!success)
+        /// <summary>
+        /// Updates an existing job.
+        /// </summary>
+        /// <param name="req">The HTTP request.</param>
+        /// <param name="id">The job ID.</param>
+        /// <returns>The HTTP response containing the updated job.</returns>
+        [Function("UpdateJob")]
+        public async Task<HttpResponseData> UpdateJob(
+            [HttpTrigger(AuthorizationLevel.Function, "put", Route = "jobs/{id}")] HttpRequestData req,
+            string id)
         {
-            var notFoundResponse = req.CreateResponse(HttpStatusCode.NotFound);
-            await notFoundResponse.WriteStringAsync($"Job with ID {id} not found or could not be deleted.");
-            return notFoundResponse;
+            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+            var jobDto = JsonSerializer.Deserialize<JobDto>(requestBody, this.jsonSerializerOptions);
+
+            if (jobDto == null)
+            {
+                var badRequestResponse = req.CreateResponse(HttpStatusCode.BadRequest);
+                await badRequestResponse.WriteStringAsync("Invalid job data provided.");
+                return badRequestResponse;
+            }
+
+            var updatedJob = await this.jobService.UpdateJobAsync(id, jobDto);
+            if (updatedJob == null)
+            {
+                var notFoundResponse = req.CreateResponse(HttpStatusCode.NotFound);
+                await notFoundResponse.WriteStringAsync($"Job with ID {id} not found for update.");
+                return notFoundResponse;
+            }
+
+            var response = req.CreateResponse(HttpStatusCode.OK);
+            await response.WriteAsJsonAsync(updatedJob);
+            return response;
         }
 
-        return req.CreateResponse(HttpStatusCode.NoContent);
+        /// <summary>
+        /// Deletes a job.
+        /// </summary>
+        /// <param name="req">The HTTP request.</param>
+        /// <param name="id">The job ID.</param>
+        /// <returns>The HTTP response indicating success or failure.</returns>
+        [Function("DeleteJob")]
+        public async Task<HttpResponseData> DeleteJob(
+            [HttpTrigger(AuthorizationLevel.Function, "delete", Route = "jobs/{id}")] HttpRequestData req,
+            string id)
+        {
+            var success = await this.jobService.DeleteJobAsync(id);
+            if (!success)
+            {
+                var notFoundResponse = req.CreateResponse(HttpStatusCode.NotFound);
+                await notFoundResponse.WriteStringAsync($"Job with ID {id} not found or could not be deleted.");
+                return notFoundResponse;
+            }
+
+            return req.CreateResponse(HttpStatusCode.NoContent);
+        }
     }
 }

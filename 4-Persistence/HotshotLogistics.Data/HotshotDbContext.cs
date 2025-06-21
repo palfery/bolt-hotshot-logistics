@@ -33,11 +33,18 @@ namespace HotshotLogistics.Data
         /// </summary>
         public DbSet<Job> Jobs { get; set; }
 
+        /// <summary>
+        /// Gets or sets the job assignments in the system.
+        /// </summary>
+        public DbSet<JobAssignment> JobAssignments { get; set; }
+
         /// <inheritdoc/>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new DriverConfiguration());
             modelBuilder.ApplyConfiguration(new JobConfiguration());
+            modelBuilder.ApplyConfiguration(new JobAssignmentConfiguration());
+
             base.OnModelCreating(modelBuilder);
         }
     }

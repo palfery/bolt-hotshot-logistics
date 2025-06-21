@@ -39,7 +39,9 @@ namespace HotshotLogistics.Data.Migrations
                         .HasColumnType("varchar(50)");
 
                     b.Property<bool>("IsActive")
-                        .HasColumnType("tinyint(1)");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("tinyint(1)")
+                        .HasDefaultValue(true);
 
                     b.Property<string>("LastName")
                         .IsRequired()
@@ -99,6 +101,7 @@ namespace HotshotLogistics.Data.Migrations
                         .HasColumnType("varchar(255)");
 
                     b.Property<decimal>("Amount")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int?>("AssignedDriverId")
@@ -114,8 +117,7 @@ namespace HotshotLogistics.Data.Migrations
 
                     b.Property<string>("EstimatedDeliveryTime")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("varchar(100)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("PickupAddress")
                         .IsRequired()
@@ -175,6 +177,43 @@ namespace HotshotLogistics.Data.Migrations
                         });
                 });
 
+            modelBuilder.Entity("HotshotLogistics.Domain.Models.JobAssignment", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(36)
+                        .HasColumnType("varchar(36)");
+
+                    b.Property<DateTime>("AssignedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("DriverId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("JobId")
+                        .IsRequired()
+                        .HasMaxLength(36)
+                        .HasColumnType("varchar(36)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AssignedAt");
+
+                    b.HasIndex("DriverId");
+
+                    b.HasIndex("JobId");
+
+                    b.HasIndex("Status");
+
+                    b.ToTable("JobAssignments", (string)null);
+                });
+
             modelBuilder.Entity("HotshotLogistics.Domain.Models.Job", b =>
                 {
                     b.HasOne("HotshotLogistics.Domain.Models.Driver", "AssignedDriver")
@@ -183,6 +222,25 @@ namespace HotshotLogistics.Data.Migrations
                         .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("AssignedDriver");
+                });
+
+            modelBuilder.Entity("HotshotLogistics.Domain.Models.JobAssignment", b =>
+                {
+                    b.HasOne("HotshotLogistics.Domain.Models.Driver", "Driver")
+                        .WithMany()
+                        .HasForeignKey("DriverId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("HotshotLogistics.Domain.Models.Job", "Job")
+                        .WithMany()
+                        .HasForeignKey("JobId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Driver");
+
+                    b.Navigation("Job");
                 });
 #pragma warning restore 612, 618
         }
