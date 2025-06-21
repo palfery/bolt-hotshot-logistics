@@ -98,7 +98,7 @@ namespace HotshotLogistics.Application.Services
             }
 
             // Verify job exists
-            var job = await this.jobRepository.GetByIdAsync(jobId, cancellationToken);
+            var job = await this.jobRepository.GetJobByIdAsync(jobId, cancellationToken);
 
             if (job == null)
             {

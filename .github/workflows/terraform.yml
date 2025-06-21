@@ -1,6 +1,11 @@
 name: Terraform Deploy
 
 on:
+  workflow_run:
+    workflows: ["DotNet Build and Test"]
+    types:
+      - completed
+    branches: [develop]
   push:
     branches: [develop]
     paths:
@@ -14,6 +19,8 @@ on:
 jobs:
   terraform:
     runs-on: ubuntu-latest
+    # Only run if the triggering workflow was successful or if it's a manual trigger
+    if: github.event.workflow_run.conclusion == 'success' || github.event_name != 'workflow_run'
     steps:
       - uses: actions/checkout@v4
       - uses: hashicorp/setup-terraform@v2
@@ -26,8 +33,4 @@ jobs:
       - name: Terraform Init
         run: terraform -chdir=7-Deployment/Azure-deploy/solution/HotshotLogistics init
       - name: Terraform Plan
-        if: github.event_name == 'pull_request'
         run: terraform -chdir=7-Deployment/Azure-deploy/solution/HotshotLogistics plan -var-file=../../environments/dev/hotshot.tfvars
-      - name: Terraform Apply
-        if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
-        run: terraform -chdir=7-Deployment/Azure-deploy/solution/HotshotLogistics apply -auto-approve -var-file=../../environments/dev/hotshot.tfvars
