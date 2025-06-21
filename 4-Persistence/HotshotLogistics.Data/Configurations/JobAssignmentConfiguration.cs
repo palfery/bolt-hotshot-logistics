@@ -1,4 +1,3 @@
-using System;
 using HotshotLogistics.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;

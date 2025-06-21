@@ -4,11 +4,11 @@
 
 namespace HotshotLogistics.Data.Configurations
 {
-    using System;
     using HotshotLogistics.Contracts.Models;
     using HotshotLogistics.Domain.Models;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
+    using System;
 
     /// <summary>
     /// Configuration for the Job entity.

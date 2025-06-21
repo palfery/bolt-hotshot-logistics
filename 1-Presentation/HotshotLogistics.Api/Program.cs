@@ -4,9 +4,6 @@
 
 namespace HotshotLogistics.Api
 {
-    using System;
-    using System.IO;
-    using System.Text.Json;
     using Azure.Identity;
     using HotshotLogistics.Application;
     using HotshotLogistics.Data;
@@ -14,7 +11,9 @@ namespace HotshotLogistics.Api
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
-    using Microsoft.Extensions.Logging;
+    using System;
+    using System.IO;
+    using System.Text.Json;
 
     /// <summary>
     /// The main program class.
@@ -90,7 +89,7 @@ namespace HotshotLogistics.Api
 
                     // Register application services
                     services.AddApplicationServices();
-                    
+
                     // Add controllers
                     services.AddControllers();
                 })
@@ -98,41 +97,5 @@ namespace HotshotLogistics.Api
 
             host.Run();
         }
-
-        var settings = config.Build();
-
-        // Get Azure App Configuration endpoint from environment or local.settings.json
-        var appConfigEndpoint = settings["AppConfig:Endpoint"];
-        if (!string.IsNullOrEmpty(appConfigEndpoint))
-        {
-            _ = config.AddAzureAppConfiguration(options =>
-            {
-                _ = options.Connect(new Uri(appConfigEndpoint), new DefaultAzureCredential())
-                       // Sentinel key for refresh
-                       .ConfigureRefresh(refresh =>
-                       {
-                           _ = refresh.Register("Sentinel", refreshAll: true)
-                                  .SetRefreshInterval(TimeSpan.FromSeconds(30));
-                       })
-                       .Select("*");
-            });
-        }
-    })
-    .ConfigureServices((context, services) =>
-    {
-        // Register Azure App Configuration refresh service
-        _ = services.AddAzureAppConfiguration();
-
-        // Register DbContext and repositories
-        _ = services.AddHotshotDbContext(context.Configuration);
-        _ = services.AddHotshotRepositories();
-
-        // Register application services
-        services.AddApplicationServices();
-
-        // Add controllers
-        services.AddControllers();
-    })
-    .Build();
-
-host.Run();
+    }
+}

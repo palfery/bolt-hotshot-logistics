@@ -4,12 +4,12 @@
 
 namespace HotshotLogistics.Application.Services
 {
-    using System.Collections.Generic;
-    using System.Threading;
-    using System.Threading.Tasks;
     using HotshotLogistics.Contracts.Models;
     using HotshotLogistics.Contracts.Repositories;
     using HotshotLogistics.Contracts.Services;
+    using System.Collections.Generic;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// Service for managing jobs.
@@ -31,33 +31,33 @@ namespace HotshotLogistics.Application.Services
         public Task<IJob> CreateJobAsync(IJob job, CancellationToken cancellationToken = default)
         {
             // Add any business logic, validation, etc., here before calling the repository
-            return this.jobRepository.CreateJobAsync(job, cancellationToken);
+            return jobRepository.CreateJobAsync(job, cancellationToken);
         }
 
         /// <inheritdoc/>
-        public Task<IJob?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
+        public Task<IJob?> GetJobByIdAsync(string id, CancellationToken cancellationToken = default)
         {
-            return this.jobRepository.GetByIdAsync(id, cancellationToken);
+            return jobRepository.GetJobByIdAsync(id, cancellationToken);
         }
 
         /// <inheritdoc/>
         public Task<IEnumerable<IJob>> GetJobsAsync(CancellationToken cancellationToken = default)
         {
-            return this.jobRepository.GetJobsAsync(cancellationToken);
+            return jobRepository.GetJobsAsync(cancellationToken);
         }
 
         /// <inheritdoc/>
         public Task<IJob?> UpdateJobAsync(string id, IJob jobDetails, CancellationToken cancellationToken = default)
         {
             // Add any business logic, validation, etc.
-            return this.jobRepository.UpdateJobAsync(id, jobDetails, cancellationToken);
+            return jobRepository.UpdateJobAsync(id, jobDetails, cancellationToken);
         }
 
         /// <inheritdoc/>
         public Task<bool> DeleteJobAsync(string id, CancellationToken cancellationToken = default)
         {
             // Add any business logic (e.g., check if job can be deleted)
-            return this.jobRepository.DeleteJobAsync(id, cancellationToken);
+            return jobRepository.DeleteJobAsync(id, cancellationToken);
         }
     }
 }

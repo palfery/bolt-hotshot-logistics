@@ -4,11 +4,11 @@
 
 namespace HotshotLogistics.Application.Services
 {
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
     using HotshotLogistics.Contracts.Models;
     using HotshotLogistics.Contracts.Repositories;
     using HotshotLogistics.Contracts.Services;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// Service for managing drivers.
@@ -29,19 +29,19 @@ namespace HotshotLogistics.Application.Services
         /// <inheritdoc/>
         public Task<IDriver> CreateDriverAsync(IDriver driver)
         {
-            return this.driverRepository.CreateDriverAsync(driver);
+            return driverRepository.CreateDriverAsync(driver);
         }
 
         /// <inheritdoc/>
         public Task<IDriver?> GetDriverByIdAsync(int id)
         {
-            return this.driverRepository.GetDriverByIdAsync(id);
+            return driverRepository.GetDriverByIdAsync(id);
         }
 
         /// <inheritdoc/>
         public Task<IEnumerable<IDriver>> GetDriversAsync()
         {
-            return this.driverRepository.GetDriversAsync();
+            return driverRepository.GetDriversAsync();
         }
     }
 }

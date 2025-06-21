@@ -1,5 +1,4 @@
 using HotshotLogistics.Application.Services;
-using HotshotLogistics.Contracts.Repositories;
 using HotshotLogistics.Contracts.Services;
 using Microsoft.Extensions.DependencyInjection;
 
