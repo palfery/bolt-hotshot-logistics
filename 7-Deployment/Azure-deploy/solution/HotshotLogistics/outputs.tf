@@ -14,9 +14,6 @@ output "mysql_server_fqdn" {
   sensitive   = true
 }
 
-output "mysql_connection_string_secret_name" {
-  description = "The name of the Key Vault secret containing the MySQL connection string"
-  value       = azurerm_key_vault_secret.mysql_connection_string.name
-}
+
 
 # Add more outputs as needed 
