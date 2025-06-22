@@ -65,6 +65,26 @@ module "function_app" {
   kind                      = "functionapp"
   storage_account_name      = azurerm_storage_account.storage.name
   tags                      = var.tags
+  
+  # Azure Entra ID OpenID Connect Authentication
+  auth_settings = {
+    enabled = true
+    default_provider = "AzureActiveDirectory"
+    unauthenticated_client_action = "RedirectToLoginPage"
+    token_store_enabled = true
+    
+    active_directory = {
+      client_id = var.azure_ad_client_id
+      client_secret = var.azure_ad_client_secret
+      allowed_audiences = ["api://${var.azure_ad_client_id}"]
+    }
+    
+    additional_login_params = {
+      "response_type" = "code id_token"
+      "scope" = "openid profile email"
+    }
+  }
+  
   # Add other required properties as needed
 }
 

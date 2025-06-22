@@ -16,6 +16,18 @@ variable "subscription_id" {
   sensitive   = true
 }
 
+variable "azure_ad_client_id" {
+  description = "The Azure AD application client ID for authentication"
+  type        = string
+  sensitive   = true
+}
+
+variable "azure_ad_client_secret" {
+  description = "The Azure AD application client secret for authentication"
+  type        = string
+  sensitive   = true
+}
+
 variable "environment" {
   description = "The environment (dev, staging, prod)"
   type        = string
