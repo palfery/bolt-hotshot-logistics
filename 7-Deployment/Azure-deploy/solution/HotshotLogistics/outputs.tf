@@ -16,7 +16,7 @@ output "mysql_server_fqdn" {
 
 output "mysql_connection_string_secret_name" {
   description = "The name of the Key Vault secret containing the MySQL connection string"
-  value       = module.mysql_connection_string_secret.resource.name
+  value       = azurerm_key_vault_secret.mysql_connection_string.name
 }
 
 # Add more outputs as needed 
