@@ -1,20 +1,7 @@
 name: Terraform Deploy
 
 on:
-  workflow_run:
-    workflows: ["DotNet Build and Test"]
-    types:
-      - completed
-    branches: [develop]
-  push:
-    branches: [develop]
-    paths:
-      - '7-Deployment/**'
-      - '.github/workflows/terraform.yml'
-  pull_request:
-    paths:
-      - '7-Deployment/**'
-      - '.github/workflows/terraform.yml'
+
   workflow_dispatch:
 
 jobs:
