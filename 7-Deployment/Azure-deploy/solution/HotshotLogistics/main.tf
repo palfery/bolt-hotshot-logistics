@@ -36,6 +36,7 @@ module "app_service_plan" {
   location            = azurerm_resource_group.rg.location
   sku_name            = "F1"
   os_type             = "Linux"
+  zone_balancing_enabled = false
   tags                = var.tags
 }
 
