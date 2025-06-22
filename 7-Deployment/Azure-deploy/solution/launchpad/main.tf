@@ -9,7 +9,6 @@ terraform {
 
 provider "azurerm" {
   features {}
-  subscription_id = "5df33f46-892f-4dc1-9d0c-701464efd7e5"
 }
 
 resource "azurerm_resource_group" "launchpad" {

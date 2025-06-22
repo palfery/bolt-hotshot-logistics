@@ -17,6 +17,7 @@ on:
           - dev
           - staging
           - prod
+
 permissions:
   id-token: write
   contents: read
@@ -26,16 +27,62 @@ jobs:
     runs-on: ubuntu-latest
     # Only run if the terraform plan workflow was successful or if it's a manual trigger
     if: github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch'
+    defaults:
+      run:
+        working-directory: 7-Deployment/Azure-deploy/solution/HotshotLogistics
+    
     steps:
-      - uses: actions/checkout@v4
-      - uses: hashicorp/setup-terraform@v2
-      - name: Azure Login
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+
+      - name: Setup Azure CLI
         uses: azure/login@v2
         with:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.DAVIDS_AZURE_SUB }}
+          enable-AzPSSession: true
+
       - name: Terraform Init
-        run: terraform -chdir=7-Deployment/Azure-deploy/solution/HotshotLogistics init
+        run: terraform init
+        env:
+          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.DAVIDS_AZURE_SUB }}
+          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          ARM_USE_OIDC: true
+
+      - name: Create tfvars with secrets
+        run: |
+          cat > hotshot.tfvars << EOF
+          # Azure Region
+          location = "East US 2"
+          
+          # Resource Group
+          resource_group_name = "rg-hotshot-logistics-dev-eastus2"
+          
+          # Azure Subscription ID - Using GitHub Secret
+          subscription_id = "${{ secrets.DAVIDS_AZURE_SUB }}"
+          
+          # Environment
+          environment = "dev"
+          
+          # Tags
+          tags = {
+            Environment = "dev"
+            Project     = "hotshot-logistics"
+            ManagedBy   = "terraform"
+            Owner       = "hotshot-team"
+          }
+          EOF
+
       - name: Terraform Apply
-        run: terraform -chdir=7-Deployment/Azure-deploy/solution/HotshotLogistics apply -auto-approve -var-file=../../environments/${{ github.event.inputs.environment || 'dev' }}/hotshot.tfvars 
+        run: terraform apply -var-file="hotshot.tfvars" -auto-approve
+        env:
+          TF_VAR_subscription_id: ${{ secrets.DAVIDS_AZURE_SUB }}
+          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.DAVIDS_AZURE_SUB }}
+          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          ARM_USE_OIDC: true 
