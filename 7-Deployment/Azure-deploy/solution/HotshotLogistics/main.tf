@@ -107,10 +107,13 @@ resource "random_password" "mysql_password" {
   special = true
 }
 
-resource "azurerm_key_vault_secret" "mysql_connection_string" {
+module "mysql_connection_string_secret" {
+  source  = "Azure/avm-res-keyvault-secret/azurerm"
+  version = "0.1.0"
   name         = "mysql-connection-string"
   value        = "Server=${module.mysql_server.resource.fqdn};Database=hotshotlogistics;Uid=mysqladmin;Pwd=${random_password.mysql_password.result};SslMode=Required;"
-  key_vault_id = module.key_vault.resource_id
+  key_vault_name = module.key_vault.name
+  resource_group_name = azurerm_resource_group.rg.name
   tags         = var.tags
 }
 
