@@ -110,7 +110,7 @@ resource "random_password" "mysql_password" {
 resource "azurerm_key_vault_secret" "mysql_connection_string" {
   name         = "mysql-connection-string"
   value        = "Server=${module.mysql_server.resource.fqdn};Database=hotshotlogistics;Uid=mysqladmin;Pwd=${random_password.mysql_password.result};SslMode=Required;"
-  key_vault_id = module.key_vault.id
+  key_vault_id = module.key_vault.resource_id
   tags         = var.tags
 }
 
