@@ -89,9 +89,13 @@ module "key_vault" {
   
   secrets = {
     mysql_connection_string = {
-      value = "Server=${module.mysql_server.resource.fqdn};Database=hotshotlogistics;Uid=mysqladmin;Pwd=${random_password.mysql_password.result};SslMode=Required;"
-      tags  = var.tags
+      name         = "mysql-connection-string"
+      content_type = "text/plain"
     }
+  }
+  
+  secrets_value = {
+    mysql_connection_string = "Server=${module.mysql_server.resource.fqdn};Database=hotshotlogistics;Uid=mysqladmin;Pwd=${random_password.mysql_password.result};SslMode=Required;"
   }
 }
 
