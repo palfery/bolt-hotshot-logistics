@@ -65,25 +65,6 @@ module "function_app" {
   storage_account_name      = azurerm_storage_account.storage.name
   tags                      = var.tags
   
-  # Azure Entra ID OpenID Connect Authentication
-  auth_settings = {
-    enabled = true
-    default_provider = "AzureActiveDirectory"
-    unauthenticated_client_action = "RedirectToLoginPage"
-    token_store_enabled = true
-    
-    active_directory = {
-      client_id = var.azure_ad_client_id
-      client_secret = var.azure_ad_client_secret
-      allowed_audiences = ["api://${var.azure_ad_client_id}"]
-    }
-    
-    additional_login_params = {
-      "response_type" = "code id_token"
-      "scope" = "openid profile email"
-    }
-  }
-  
   # Add other required properties as needed
 }
 
@@ -129,7 +110,7 @@ resource "random_password" "mysql_password" {
 resource "azurerm_key_vault_secret" "mysql_connection_string" {
   name         = "mysql-connection-string"
   value        = "Server=${module.mysql_server.resource.fqdn};Database=hotshotlogistics;Uid=mysqladmin;Pwd=${random_password.mysql_password.result};SslMode=Required;"
-  key_vault_id = module.key_vault.resource_id
+  key_vault_id = module.key_vault.id
   tags         = var.tags
 }
 
