@@ -10,4 +10,26 @@ variable "resource_group_name" {
   default     = "hotshot-logistics-rg"
 }
 
+variable "subscription_id" {
+  description = "The Azure subscription ID"
+  type        = string
+  sensitive   = true
+}
+
+variable "environment" {
+  description = "The environment (dev, staging, prod)"
+  type        = string
+  default     = "dev"
+}
+
+variable "tags" {
+  description = "Tags to apply to all resources"
+  type        = map(string)
+  default = {
+    Environment = "dev"
+    Project     = "hotshot-logistics"
+    ManagedBy   = "terraform"
+  }
+}
+
 # Add more variables as needed 
