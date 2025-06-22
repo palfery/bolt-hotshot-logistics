@@ -49,6 +49,11 @@ jobs:
 
       - name: Terraform Init
         run: terraform init
+        env:
+          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.DAVIDS_AZURE_SUB }}
+          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          ARM_USE_OIDC: true
 
       - name: Create tfvars with secrets
         run: |
@@ -78,9 +83,9 @@ jobs:
         run: terraform plan -var-file="hotshot.tfvars"
         env:
           TF_VAR_subscription_id: ${{ secrets.DAVIDS_AZURE_SUB }}
+          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.DAVIDS_AZURE_SUB }}
+          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          ARM_USE_OIDC: true
 
-      - name: Terraform Apply
-        if: github.ref == 'refs/heads/main'
-        run: terraform apply -var-file="hotshot.tfvars" -auto-approve
-        env:
-          TF_VAR_subscription_id: ${{ secrets.DAVIDS_AZURE_SUB }}
+  
