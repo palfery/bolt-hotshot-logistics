@@ -119,7 +119,6 @@ module "mysql_server" {
   backup_retention_days = 7
   geo_redundant_backup_enabled = false
   sku_name            = "B1ms"
-  version             = "8.0.21"
   tags                = var.tags
 }
 
