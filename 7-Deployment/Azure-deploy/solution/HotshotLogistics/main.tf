@@ -86,6 +86,13 @@ module "key_vault" {
   tenant_id           = data.azurerm_client_config.current.tenant_id
   sku_name            = "standard"
   tags                = var.tags
+  
+  secrets = {
+    mysql_connection_string = {
+      value = "Server=${module.mysql_server.resource.fqdn};Database=hotshotlogistics;Uid=mysqladmin;Pwd=${random_password.mysql_password.result};SslMode=Required;"
+      tags  = var.tags
+    }
+  }
 }
 
 module "mysql_server" {
@@ -105,13 +112,6 @@ module "mysql_server" {
 resource "random_password" "mysql_password" {
   length  = 16
   special = true
-}
-
-resource "azurerm_key_vault_secret" "mysql_connection_string" {
-  name         = "mysql-connection-string"
-  value        = "Server=${module.mysql_server.resource.fqdn};Database=hotshotlogistics;Uid=mysqladmin;Pwd=${random_password.mysql_password.result};SslMode=Required;"
-  key_vault_id = "/subscriptions/${var.subscription_id}/resourceGroups/${azurerm_resource_group.rg.name}/providers/Microsoft.KeyVault/vaults/${module.key_vault.name}"
-  tags         = var.tags
 }
 
 # Add your Azure resources here 
