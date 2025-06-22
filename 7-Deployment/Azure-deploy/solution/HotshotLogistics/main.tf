@@ -51,7 +51,7 @@ resource "azurerm_storage_account" "storage" {
 
 module "function_app" {
   source  = "Azure/avm-res-web-site/azurerm"
-  version = "0.17.2"
+  version = "0.15.0"
   name                      = "${var.environment}-hotshot-logistics-function"
   resource_group_name       = azurerm_resource_group.rg.name
   location                  = azurerm_resource_group.rg.location
