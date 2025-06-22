@@ -2,8 +2,15 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "~> 3.0"
+      version = "~> 4.0"
     }
+  }
+  
+  backend "azurerm" {
+    resource_group_name  = "rg-launchpad-dev-eastus2"
+    storage_account_name = "hotshotlogisticsstate"
+    container_name       = "hotshotlogistics-tfstate"
+    key                  = "hotshotlogistics.tfstate"
   }
 }
 
@@ -18,15 +25,14 @@ resource "azurerm_resource_group" "rg" {
   location = var.location
 }
 
-resource "azurerm_app_service_plan" "plan" {
+module "app_service_plan" {
+  source  = "Azure/avm-res-web-serverfarm/azurerm"
+  version = "0.7.0"
   name                = "hotshot-logistics-plan"
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
-  kind                = "FunctionApp"
-  sku {
-    tier = "Dynamic"
-    size = "Y1"
-  }
+  sku_name            = "Y1"
+  kind                = "functionapp"
 }
 
 resource "azurerm_storage_account" "storage" {
@@ -38,30 +44,27 @@ resource "azurerm_storage_account" "storage" {
 }
 
 module "function_app" {
-  source  = "Azure/function-app/azurerm"
-  version = "~> 1.0"
-
-  name                       = "hotshot-logistics-function"
-  resource_group_name        = azurerm_resource_group.rg.name
-  location                   = azurerm_resource_group.rg.location
-  app_service_plan_id        = azurerm_app_service_plan.plan.id
-  storage_account_name       = azurerm_storage_account.storage.name
-  storage_account_access_key = azurerm_storage_account.storage.primary_access_key
+  source  = "Azure/avm-res-web-site/azurerm"
+  version = "0.17.2"
+  name                = "hotshot-logistics-function"
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.rg.location
+  server_farm_id      = module.app_service_plan.id
+  kind                = "functionapp"
+  # Add other required properties as needed
 }
 
 module "app_configuration" {
-  source  = "Azure/app-configuration/azurerm"
-  version = "~> 1.0"
-
+  source  = "Azure/avm-res-appconfiguration-configurationstore/azure"
+  version = "0.1.0"
   name                = "hotshot-logistics-config"
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
 }
 
 module "key_vault" {
-  source  = "Azure/key-vault/azurerm"
-  version = "~> 1.0"
-
+  source  = "Azure/avm-res-keyvault-vault/azurerm"
+  version = "0.10.0"
   name                = "hotshot-logistics-kv"
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
