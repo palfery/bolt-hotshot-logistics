@@ -41,7 +41,6 @@ module "app_service_plan" {
   sku_name            = "F1"
   os_type             = "Linux"
   zone_balancing_enabled = false
-  minimum_instance_count = 1
   tags                = var.tags
 }
 
