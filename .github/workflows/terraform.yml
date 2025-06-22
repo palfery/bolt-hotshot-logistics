@@ -1,7 +1,6 @@
 name: Terraform Deploy
 
 on:
-
   workflow_dispatch:
 
 jobs:
