@@ -3,7 +3,7 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "~> 4.21.1"
+      version = "~> 4.34.0"
     }
     random = {
       source  = "hashicorp/random"
@@ -56,7 +56,7 @@ resource "azurerm_storage_account" "storage" {
 
 module "function_app" {
   source  = "Azure/avm-res-web-site/azurerm"
-  version = "0.15.0"
+  version = "0.17.2"
   name                      = "${var.environment}-hotshot-logistics-function"
   resource_group_name       = azurerm_resource_group.rg.name
   location                  = azurerm_resource_group.rg.location
@@ -110,7 +110,7 @@ module "key_vault" {
 
 module "mysql_server" {
   source  = "Azure/avm-res-dbformysql-flexibleserver/azurerm"
-  version = "0.1.0"
+  version = "0.1.1"
   name                = "${var.environment}-hotshot-logistics-mysql"
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
