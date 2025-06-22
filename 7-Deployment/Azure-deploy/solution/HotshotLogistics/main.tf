@@ -1,9 +1,14 @@
 terraform {
+  required_version = "~> 1.9.0"
 
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
       version = "~> 4.21.1"
+    }
+    random = {
+      source  = "hashicorp/random"
+      version = "~> 3.0"
     }
   }
   
@@ -37,6 +42,7 @@ module "app_service_plan" {
   sku_name            = "F1"
   os_type             = "Linux"
   zone_balancing_enabled = false
+  minimum_instance_count = 1
   tags                = var.tags
 }
 
@@ -81,6 +87,35 @@ module "key_vault" {
   tenant_id           = data.azurerm_client_config.current.tenant_id
   sku_name            = "standard"
   tags                = var.tags
+}
+
+module "mysql_server" {
+  source  = "Azure/avm-res-dbformysql-flexibleserver/azurerm"
+  version = "0.1.0"
+  name                = "${var.environment}-hotshot-logistics-mysql"
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.rg.location
+  administrator_login = "mysqladmin"
+  administrator_password = random_password.mysql_password.result
+  backup_retention_days = 7
+  geo_redundant_backup_enabled = false
+  sku_name            = "B1ms"
+  version             = "8.0.21"
+  tags                = var.tags
+}
+
+resource "random_password" "mysql_password" {
+  length  = 16
+  special = true
+}
+
+module "mysql_connection_string_secret" {
+  source  = "Azure/avm-res-keyvault-secret/azurerm"
+  version = "0.1.0"
+  name         = "mysql-connection-string"
+  value        = "Server=${module.mysql_server.resource.fqdn};Database=hotshotlogistics;Uid=mysqladmin;Pwd=${random_password.mysql_password.result};SslMode=Required;"
+  key_vault_id = module.key_vault.resource.id
+  tags         = var.tags
 }
 
 # Add your Azure resources here 
