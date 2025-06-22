@@ -109,7 +109,7 @@ module "mysql_server" {
   administrator_password = random_password.mysql_password.result
   backup_retention_days = 7
   geo_redundant_backup_enabled = false
-  sku_name            = "B1ms"
+  sku_name            = "B_Gen5_1"
   tags                = var.tags
 }
 
