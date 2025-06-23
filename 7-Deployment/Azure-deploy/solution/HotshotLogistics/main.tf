@@ -14,7 +14,7 @@ terraform {
   backend "azurerm" {
     resource_group_name  = "rg-launchpad-dev-eastus"
     storage_account_name = "hotshotlogisticsstate"
-    container_name       = "hotshotlogistics-tfstate"
+    container_name       = "tfstate"
     key                  = "hotshotlogistics.tfstate"
   }
 }
