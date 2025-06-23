@@ -28,20 +28,21 @@ namespace HotshotLogistics.Data
 
             if (string.IsNullOrEmpty(connectionString))
             {
+                var dbServer = Environment.GetEnvironmentVariable("HSL_DBServer") ?? "localhost";
+                var dbName = Environment.GetEnvironmentVariable("HSL_DBName") ?? "hotshot_logistics";
                 var dbUser = Environment.GetEnvironmentVariable("HSL_DBUser");
                 var dbPassword = Environment.GetEnvironmentVariable("HSL_DBPassword");
 
                 if (string.IsNullOrEmpty(dbUser) || string.IsNullOrEmpty(dbPassword))
                 {
-                    throw new InvalidOperationException("Database connection configuration is missing. Provide ConnectionStrings:DefaultConnection or HSL_DBUser/HSL_DBPassword variables.");
+                    throw new InvalidOperationException("Database connection configuration is missing. Provide ConnectionStrings:DefaultConnection or HSL_DBServer/HSL_DBName/HSL_DBUser/HSL_DBPassword variables.");
                 }
 
-                connectionString = $"Server=localhost;Database=hotshot_logistics;User={dbUser};Password={dbPassword};Port=3306;SslMode=None;";
+                connectionString = $"Server={dbServer};Database={dbName};User Id={dbUser};Password={dbPassword};TrustServerCertificate=true;";
             }
 
-            var serverVersion = ServerVersion.AutoDetect(connectionString);
             services.AddDbContext<HotshotDbContext>(options =>
-                options.UseMySql(connectionString, serverVersion));
+                options.UseSqlServer(connectionString));
 
             return services;
         }

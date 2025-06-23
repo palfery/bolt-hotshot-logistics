@@ -5,7 +5,7 @@ This project implements the **Persistence**/Infrastructure concerns of the Clean
 Architecture, providing repositories that the Application layer depends upon.
 
 ## Tech Stack
-- EF Core with Pomelo MySQL
+- EF Core with SQL Server
 
 ## Build
 

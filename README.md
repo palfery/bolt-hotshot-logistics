@@ -1,7 +1,7 @@
 # Hotshot Logistics
 
 A modern logistics platform for hotshot delivery, built for speed, reliability, and flexibility.  
-This monorepo contains the full-stack solution: a React-based Admin Dashboard, a cross-platform Driver Mobile App, and a .NET/Azure-based backend with MySQL.
+This monorepo contains the full-stack solution: a React-based Admin Dashboard, a cross-platform Driver Mobile App, and a .NET/Azure-based backend with SQL Server.
 
 ---
 
@@ -12,7 +12,7 @@ It features:
 
 - **Admin Dashboard:** Manage jobs, drivers, customers, and view analytics (React/Next.js, TailwindCSS)
 - **Driver Mobile App:** Accept & manage jobs, track deliveries, navigation (Expo React Native)
-- **Backend API:** Scalable Azure Functions (.NET 8), MySQL, Entity Framework Core, secure config with Key Vault/App Config
+- **Backend API:** Scalable Azure Functions (.NET 8), SQL Server, Entity Framework Core, secure config with Key Vault/App Config
 
 ---
 
@@ -20,8 +20,8 @@ It features:
 
 - **Frontend (Admin):** Next.js (React 18), TailwindCSS, Recharts, React Table, React Query, Zod, Headless UI, Heroicons
 - **Mobile (Driver):** Expo (React Native 0.79+), Lucide React Native, Expo Router, Google Fonts, React Native Maps
-- **Backend:** Azure Functions v4 (.NET 8), Entity Framework Core, Pomelo MySQL provider, Azure App Configuration, Key Vault
-- **Database:** MySQL
+- **Backend:** Azure Functions v4 (.NET 8), Entity Framework Core, SQL Server provider, Azure App Configuration, Key Vault
+- **Database:** SQL Server
 - **Dev Tools:** ESLint, Prettier, TypeScript, xUnit for backend tests
 
 ### Clean Architecture
@@ -47,6 +47,7 @@ Folder mapping:
 - Added integration and architecture tests with **xUnit** and GitHub Actions CI.
 - Fixed linting/build errors and applied formatting across the repo.
 - Added initial Azure App Configuration support.
+- Migrated from MySQL to Azure SQL Server for improved performance and Azure integration.
 
 
 ### Clean Architecture
@@ -125,7 +126,7 @@ root/
 
 - Node.js (18+)
 - .NET 8 SDK
-- MySQL (local or cloud)
+- SQL Server (local or cloud)
 - (Optional) Azure account for cloud deployment
 
 ---
@@ -178,7 +179,7 @@ dotnet run
 
 ### 5. Database Setup
 
-- Update `DefaultConnection` in your config to point to your MySQL instance.
+- Update `DefaultConnection` in your config to point to your SQL Server instance.
 - Apply EF Core migrations (coming soon).
 - Example:
   ```json
@@ -215,4 +216,4 @@ See future `CONTRIBUTING.md` for guidelines.
 
 ## ✨ Credits
 
-- Built with [Next.js](https://nextjs.org/), [Expo](https://expo.dev/), [.NET](https://dotnet.microsoft.com/), [Azure](https://azure.microsoft.com/), [MySQL](https://www.mysql.com/), and more.
+- Built with [Next.js](https://nextjs.org/), [Expo](https://expo.dev/), [.NET](https://dotnet.microsoft.com/), [Azure](https://azure.microsoft.com/), [SQL Server](https://www.microsoft.com/en-us/sql-server/sql-server-2022), and more.

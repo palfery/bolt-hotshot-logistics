@@ -15,12 +15,14 @@ public class HotshotDbContextFactory : IDesignTimeDbContextFactory<HotshotDbCont
     /// <inheritdoc/>
     public HotshotDbContext CreateDbContext(string[] args)
     {
-        var dbUser = Environment.GetEnvironmentVariable("HSL_DBUser") ?? "root";
+        var dbServer = Environment.GetEnvironmentVariable("HSL_DBServer") ?? "localhost";
+        var dbName = Environment.GetEnvironmentVariable("HSL_DBName") ?? "hotshot_logistics";
+        var dbUser = Environment.GetEnvironmentVariable("HSL_DBUser") ?? "sa";
         var dbPassword = Environment.GetEnvironmentVariable("HSL_DBPassword") ?? string.Empty;
-        var dbPort = Environment.GetEnvironmentVariable("HSL_DBPort") ?? "3306";
-        var connectionString = $"server=localhost;port={dbPort};database=hotshot_logistics;user={dbUser};password={dbPassword}";
+        
+        var connectionString = $"Server={dbServer};Database={dbName};User Id={dbUser};Password={dbPassword};TrustServerCertificate=true;";
         var optionsBuilder = new DbContextOptionsBuilder<HotshotDbContext>();
-        optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+        optionsBuilder.UseSqlServer(connectionString);
         return new HotshotDbContext(optionsBuilder.Options);
     }
 }
