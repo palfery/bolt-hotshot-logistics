@@ -36,4 +36,8 @@ updates:
       include: "scope"
     labels:
       - "dependencies"
-      - "github-actions" 
+      - "github-actions"
+    ignore:
+      # Avoid automatic upgrades of our .NET version
+      - dependency-name: "actions/setup-dotnet"
+        update-types: ["version-update:semver-major"]
