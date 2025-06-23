@@ -10,7 +10,8 @@
 		},
 		"ghcr.io/devcontainers-extra/features/express-generator:2": {
 			"version": "latest"
-		}
+		},
+		"ghcr.io/devcontainers/features/azure-cli:1": {}
 	}
 
 	// Features to add to the dev container. More info: https://containers.dev/features.
@@ -25,7 +26,7 @@
 	// }
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	// "postCreateCommand": "dotnet restore",
+	 "postCreateCommand": "npm install -g @anthropic-ai/claude-cli",
 
 	// Configure tool-specific properties.
 	// "customizations": {},
