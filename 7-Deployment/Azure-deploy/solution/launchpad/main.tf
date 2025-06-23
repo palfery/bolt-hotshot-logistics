@@ -1,6 +1,6 @@
 terraform {
   backend "azurerm" {
-    resource_group_name  = "rg-launchpad-dev-eastus2"
+    resource_group_name  = "rg-launchpad-dev-eastus"
     storage_account_name = "hotshotlogisticsstate"
     container_name       = "tfstate"
     key                  = "launchpad.tfstate"
@@ -12,8 +12,13 @@ provider "azurerm" {
 }
 
 resource "azurerm_resource_group" "launchpad" {
-  name     = "rg-launchpad-dev-eastus2"
-  location = "East US 2"
+  name     = "rg-launchpad-dev-eastus"
+  location = "East US"
+  tags = {
+    Environment = "dev"
+    Project     = "launchpad"
+    ManagedBy   = "terraform"
+  }
 }
 
 resource "azurerm_storage_account" "remote_state" {

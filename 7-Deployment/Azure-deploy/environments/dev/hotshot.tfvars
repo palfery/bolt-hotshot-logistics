@@ -1,5 +1,5 @@
 # Azure Region
-location = "East US 2"
+location = "East US"
 
 # Resource Group
 resource_group_name = "rg-hotshot-logistics-dev-eastus2"
