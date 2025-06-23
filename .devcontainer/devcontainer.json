@@ -4,6 +4,7 @@
 	"name": "C# (.NET)",
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
 	"image": "mcr.microsoft.com/devcontainers/dotnet:1-8.0",
+	"postCreateCommand": "npm install -g @anthropic-ai/claude-cli",
 	"features": {
 		"ghcr.io/devcontainers/features/dotnet:2": {
 			"version": "8.0"
@@ -26,8 +27,7 @@
 	// }
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "npm install -g @anthropic-ai/claude-cli",
-
+	
 	// Configure tool-specific properties.
 	// "customizations": {},
 
