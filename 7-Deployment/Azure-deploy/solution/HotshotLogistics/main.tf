@@ -77,6 +77,33 @@ module "app_configuration" {
   tags                        = var.tags
 }
 
+# Azure SQL Server
+resource "azurerm_mssql_server" "sql_server" {
+  name                         = "${var.environment}-hotshot-logistics-sql"
+  resource_group_name          = azurerm_resource_group.rg.name
+  location                     = azurerm_resource_group.rg.location
+  version                      = "12.0"
+  administrator_login          = "sqladmin"
+  administrator_login_password = random_password.sql_password.result
+  tags                         = var.tags
+}
+
+# Azure SQL Database (Serverless)
+resource "azurerm_mssql_database" "sql_database" {
+  name           = "hotshotlogistics"
+  server_id      = azurerm_mssql_server.sql_server.id
+  collation      = "SQL_Latin1_General_CP1_CI_AS"
+  license_type   = "LicenseIncluded"
+  max_size_gb    = 2
+  sku_name       = "GP_S_Gen5_1"
+  tags           = var.tags
+}
+
+resource "random_password" "sql_password" {
+  length  = 16
+  special = true
+}
+
 module "key_vault" {
   source  = "Azure/avm-res-keyvault-vault/azurerm"
   version = "0.10.0"
@@ -88,34 +115,20 @@ module "key_vault" {
   tags                = var.tags
   
   secrets = {
-    mysql_connection_string = {
-      name         = "mysql-connection-string"
+    sql_connection_string = {
+      name         = "sql-connection-string"
+      content_type = "text/plain"
+    }
+    sql_admin_password = {
+      name         = "sql-admin-password"
       content_type = "text/plain"
     }
   }
   
   secrets_value = {
-    mysql_connection_string = "Server=${module.mysql_server.resource.fqdn};Database=hotshotlogistics;Uid=mysqladmin;Pwd=${random_password.mysql_password.result};SslMode=Required;"
+    sql_connection_string = "Server=${azurerm_mssql_server.sql_server.fully_qualified_domain_name};Database=${azurerm_mssql_database.sql_database.name};User Id=sqladmin;Password=${random_password.sql_password.result};TrustServerCertificate=true;"
+    sql_admin_password  = random_password.sql_password.result
   }
-}
-
-module "mysql_server" {
-  source  = "Azure/avm-res-dbformysql-flexibleserver/azurerm"
-  version = "0.1.1"
-  name                = "${var.environment}-hotshot-logistics-mysql"
-  resource_group_name = azurerm_resource_group.rg.name
-  location            = azurerm_resource_group.rg.location
-  administrator_login = "mysqladmin"
-  administrator_password = random_password.mysql_password.result
-  backup_retention_days = 7
-  geo_redundant_backup_enabled = false
-  sku_name            = "B_Standard_B1ms"
-  tags                = var.tags
-}
-
-resource "random_password" "mysql_password" {
-  length  = 16
-  special = true
 }
 
 # Add your Azure resources here 
