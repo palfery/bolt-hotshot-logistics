@@ -77,16 +77,28 @@ The project uses a numbered folder convention to clearly express architectural l
 
   > **Note:** The Test layer should not contain production code or business logic. All tests should be automated and runnable via the build pipeline to ensure ongoing code quality and regressions are quickly identified.
 
-- [`6-Lib`](https://github.com/dpalfery/bolt-hotshot-logistics/tree/development/6-Lib):  
-  Shared libraries or supporting code that doesn’t fit elsewhere.
+- [`6-Lib`](https://github.com/dpalfery/bolt-hotshot-logistics/tree/development/6-Lib):   
+  This folder contains shared libraries and supporting code that are used across multiple layers or components of the solution:
+  - **Third-Party Integrations:** Wrappers or adapters for external libraries or APIs that don’t fit cleanly into other architectural layers.
+  - **Custom Middleware & Components:** Standalone components, middleware, or cross-cutting features (e.g., custom logging providers, authentication handlers) intended for reuse.
+  - **Experimental or Incubating Libraries:** New utilities or abstractions under evaluation for broader adoption.
+
+  > **Note:** Contents of this folder should be kept generic and decoupled from business rules. If a library becomes specific to a single domain, consider moving it to a more appropriate layer.
 
 - [`7-Deployment`](https://github.com/dpalfery/bolt-hotshot-logistics/tree/development/7-Deployment):  
-  Deployment scripts, manifests, and infrastructure-as-code for CI/CD.
+  This folder contains all assets and scripts necessary for deploying the application in various environments (development, staging, production, etc). Its contents typically include:
+  - **CI/CD Pipelines:** YAML or configuration files for continuous integration and deployment systems (e.g., GitHub Actions, Azure DevOps, GitLab CI).
+  - **Docker & Containerization:** Dockerfiles, docker-compose files, and related container orchestration manifests.
+  - **Infrastructure as Code (IaC):** Scripts and templates for provisioning infrastructure (e.g., Terraform, Bicep, ARM templates, Ansible, Pulumi).
+  - **Deployment Scripts:** Shell scripts, PowerShell scripts, or batch files to automate build, publish, and deployment steps.
+  - **Environment Configuration:** Sample or template environment files (e.g., `.env`, `appsettings.Production.json`) and secrets management guidance.
+  - **Kubernetes & Cloud Native:** Helm charts, Kubernetes manifests, or other cloud-native deployment definitions.
+  - **Release Notes & Runbooks:** Documentation for deployment processes, rollback procedures, or operational runbooks.
+  
+  > **Note:** The Deployment layer should not contain application code. It is strictly for automating and documenting how the application is built, released, and managed in real-world environments.
+
 
 ### Other root folders and files
-
-- [`.cursor`](https://github.com/dpalfery/bolt-hotshot-logistics/tree/development/.cursor):  
-  Editor or tool state/configuration.
 
 - [`.github`](https://github.com/dpalfery/bolt-hotshot-logistics/tree/development/.github):  
   GitHub configuration (issues, PR templates, workflows, etc).
@@ -99,21 +111,6 @@ The project uses a numbered folder convention to clearly express architectural l
 
 - [`.gitignore`](https://github.com/dpalfery/bolt-hotshot-logistics/blob/development/.gitignore):  
   Git ignore settings.
-
-- [`HotshotLogistics.sln`](https://github.com/dpalfery/bolt-hotshot-logistics/blob/development/HotshotLogistics.sln):  
-  The Visual Studio solution file.
-
-- [`README.md`](https://github.com/dpalfery/bolt-hotshot-logistics/blob/development/README.md):  
-  Main project documentation.
-
-- [`SECURITY.md`](https://github.com/dpalfery/bolt-hotshot-logistics/blob/development/SECURITY.md):  
-  Security guidelines.
-
-- [`stylecop.json`](https://github.com/dpalfery/bolt-hotshot-logistics/blob/development/stylecop.json):  
-  StyleCop rules configuration.
-
-> **Note:** This list may be incomplete due to GitHub API limitations. See the [full folder structure online](https://github.com/dpalfery/bolt-hotshot-logistics/tree/development).
-
 ---
 
 ## Coding Style
