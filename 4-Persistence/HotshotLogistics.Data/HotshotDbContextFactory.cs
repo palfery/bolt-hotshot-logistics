@@ -19,7 +19,7 @@ public class HotshotDbContextFactory : IDesignTimeDbContextFactory<HotshotDbCont
         var dbName = Environment.GetEnvironmentVariable("HSL_DBName") ?? "hotshot_logistics";
         var dbUser = Environment.GetEnvironmentVariable("HSL_DBUser") ?? "sa";
         var dbPassword = Environment.GetEnvironmentVariable("HSL_DBPassword") ?? string.Empty;
-        
+
         var connectionString = $"Server={dbServer};Database={dbName};User Id={dbUser};Password={dbPassword};TrustServerCertificate=true;";
         var optionsBuilder = new DbContextOptionsBuilder<HotshotDbContext>();
         optionsBuilder.UseSqlServer(connectionString);
