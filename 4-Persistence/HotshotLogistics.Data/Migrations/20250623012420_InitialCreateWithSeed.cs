@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -27,7 +27,7 @@ namespace HotshotLogistics.Data.Migrations
                     LicenseExpiryDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsActive = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                 },
                 constraints: table =>
                 {
@@ -48,7 +48,7 @@ namespace HotshotLogistics.Data.Migrations
                     EstimatedDeliveryTime = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     AssignedDriverId = table.Column<int>(type: "int", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                 },
                 constraints: table =>
                 {
@@ -70,7 +70,7 @@ namespace HotshotLogistics.Data.Migrations
                     DriverId = table.Column<int>(type: "int", nullable: false),
                     AssignedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                 },
                 constraints: table =>
                 {
@@ -95,7 +95,7 @@ namespace HotshotLogistics.Data.Migrations
                 values: new object[,]
                 {
                     { 1, new DateTime(2024, 6, 15, 0, 0, 0, 0, DateTimeKind.Utc), "alice.smith@example.com", "Alice", true, "Smith", new DateTime(2030, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "A1234567", "555-1234", null },
-                    { 2, new DateTime(2024, 6, 15, 0, 0, 0, 0, DateTimeKind.Utc), "bob.johnson@example.com", "Bob", true, "Johnson", new DateTime(2031, 12, 31, 0, 0, 0, 0, DateTimeKind.Unspecified), "B7654321", "555-5678", null }
+                    { 2, new DateTime(2024, 6, 15, 0, 0, 0, 0, DateTimeKind.Utc), "bob.johnson@example.com", "Bob", true, "Johnson", new DateTime(2031, 12, 31, 0, 0, 0, 0, DateTimeKind.Unspecified), "B7654321", "555-5678", null },
                 });
 
             migrationBuilder.InsertData(
@@ -104,7 +104,7 @@ namespace HotshotLogistics.Data.Migrations
                 values: new object[,]
                 {
                     { "job-1", 100.00m, 1, new DateTime(2024, 6, 15, 0, 0, 0, 0, DateTimeKind.Utc), "456 Elm St", "2024-06-16T10:00:00Z", "123 Main St", "High", "Pending", "Deliver Package A", null },
-                    { "job-2", 75.50m, 2, new DateTime(2024, 6, 15, 0, 0, 0, 0, DateTimeKind.Utc), "321 Pine St", "2024-06-17T14:00:00Z", "789 Oak St", "Medium", "InTransit", "Deliver Package B", null }
+                    { "job-2", 75.50m, 2, new DateTime(2024, 6, 15, 0, 0, 0, 0, DateTimeKind.Utc), "321 Pine St", "2024-06-17T14:00:00Z", "789 Oak St", "Medium", "InTransit", "Deliver Package B", null },
                 });
 
             migrationBuilder.CreateIndex(
