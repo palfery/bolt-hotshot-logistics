@@ -107,7 +107,7 @@ resource "random_password" "sql_password" {
 module "key_vault" {
   source  = "Azure/avm-res-keyvault-vault/azurerm"
   version = "0.10.0"
-  name                = "${var.environment}-hotshot-logistics-kv-01"
+  name                = "${var.environment}-hotshot-log-kv-01"
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
   tenant_id           = data.azurerm_client_config.current.tenant_id
