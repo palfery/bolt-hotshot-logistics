@@ -119,10 +119,15 @@ module "key_vault" {
       name         = "sql-connection-string"
       content_type = "text/plain"
     }
+    sql_admin_password = {
+      name         = "sql-admin-password"
+      content_type = "text/plain"
+    }
   }
   
   secrets_value = {
     sql_connection_string = "Server=${azurerm_mssql_server.sql_server.fully_qualified_domain_name};Database=${azurerm_mssql_database.sql_database.name};User Id=sqladmin;Password=${random_password.sql_password.result};TrustServerCertificate=true;"
+    sql_admin_password  = random_password.sql_password.result
   }
 }
 
