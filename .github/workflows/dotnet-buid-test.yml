@@ -1,11 +1,6 @@
 name: Dot Net API Build and Test
 
 on:
-  push:
-    paths:
-      - '**/*.cs'
-      - '**/*.csproj'
-      - '.github/workflows/**'
   pull_request:
     paths:
       - '**/*.cs'
