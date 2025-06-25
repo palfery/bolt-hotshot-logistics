@@ -5,18 +5,18 @@ output "resource_group_name" {
 
 output "sql_server_name" {
   description = "The name of the SQL Server"
-  value       = azurerm_mssql_server.sql_server.name
+  value       = module.sql_server.resource.name
 }
 
 output "sql_server_fqdn" {
   description = "The fully qualified domain name of the SQL Server"
-  value       = azurerm_mssql_server.sql_server.fully_qualified_domain_name
+  value       = module.sql_server.resource.fully_qualified_domain_name
   sensitive   = true
 }
 
 output "sql_database_name" {
   description = "The name of the SQL Database"
-  value       = azurerm_mssql_database.sql_database.name
+  value       = module.sql_database.resource.name
 }
 
 # Add more outputs as needed 
