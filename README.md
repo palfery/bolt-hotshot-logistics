@@ -214,6 +214,15 @@ See future `CONTRIBUTING.md` for guidelines.
 
 ---
 
+## 🤖 Claude CLI GitHub Action
+
+Run the workflow in `.github/workflows/claude-cli.yml` to test prompts against Claude.
+Create a repository secret named `ANTHROPIC_API_KEY` with your API token; the workflow passes this secret to the CLI.
+Provide your prompt when manually dispatching the workflow from the **Actions** tab.
+
+
+---
+
 ## ✨ Credits
 
 - Built with [Next.js](https://nextjs.org/), [Expo](https://expo.dev/), [.NET](https://dotnet.microsoft.com/), [Azure](https://azure.microsoft.com/), [SQL Server](https://www.microsoft.com/en-us/sql-server/sql-server-2022), and more.
