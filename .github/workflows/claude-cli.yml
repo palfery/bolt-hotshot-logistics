@@ -1,0 +1,29 @@
+name: Run Claude CLI
+
+on:
+  workflow_dispatch:
+    inputs:
+      prompt:
+        description: 'Prompt to send to Claude'
+        required: true
+        type: string
+
+jobs:
+  run-claude:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install anthropic-cli
+        run: pip install anthropic-cli
+
+      - name: Run Claude CLI
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: anthropic-cli -g user "${{ inputs.prompt }}"
