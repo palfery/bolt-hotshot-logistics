@@ -92,9 +92,20 @@ module "sql_server" {
   administrator_login          = var.administrator_login
   administrator_login_password = var.administrator_login_password
 
-  # Networking
-  public_network_access_enabled = true
+  # Networking - Disable public access for security
+  public_network_access_enabled = false
   tags= var.tags
+  
+  # Enable auditing
+  auditing_enabled = true
+  
+  # Configure firewall rules (if public access is needed)
+  firewall_rules = {
+    AllowAzureServices = {
+      start_ip_address = "0.0.0.0"
+      end_ip_address   = "0.0.0.0"
+    }
+  }
 }
 
 module "sql_database" {
