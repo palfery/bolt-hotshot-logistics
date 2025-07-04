@@ -193,9 +193,48 @@ The project uses a numbered folder convention to clearly express architectural l
 
 ## Security
 
-- Do not log sensitive data.
-- Use built-in ASP.NET Core Identity for authentication if possible.
-- Validate all user input and use Data Annotations or FluentValidation.
+### Authentication & Authorization
+- **REQUIRED**: Implement proper authentication for all API endpoints
+- Use Azure AD integration for production environments
+- Implement JWT bearer token authentication with role-based access control
+- Apply `[Authorize]` attributes to all controllers and sensitive actions
+- Never expose API endpoints without proper authentication
+
+### Input Validation & Data Protection
+- **REQUIRED**: Validate all user input using Data Annotations or FluentValidation
+- Sanitize inputs to prevent XSS and injection attacks
+- Use parameterized queries (Entity Framework handles this automatically)
+- Do not log sensitive data (passwords, tokens, personal information)
+- Implement proper error handling that doesn't leak system information
+
+### Infrastructure Security
+- Follow the secure Terraform configurations in `/docs/security/`
+- Use Key Vault for all secrets and connection strings
+- Disable public access to databases and storage accounts
+- Implement network security groups and proper firewall rules
+- Enable audit logging and monitoring
+
+### Security Headers & HTTPS
+- **REQUIRED**: Enforce HTTPS in all environments
+- Implement security headers middleware (see `/docs/security/security-headers-example.cs`)
+- Configure CORS policies restrictively
+- Add rate limiting to prevent abuse
+- Set proper Content Security Policy (CSP) headers
+
+### Code Security Practices
+- Never commit secrets to source control
+- Use managed identities for Azure resource access
+- Implement proper session management
+- Add security-focused unit tests
+- Follow the security checklist in `SECURITY_CHECKLIST.md`
+
+### Security Review Process
+- All security-related changes must be reviewed by the security team
+- Run security scans before deploying to production
+- Follow the vulnerability reporting process in `SECURITY.md`
+- Review and update dependencies regularly for security patches
+
+**For detailed security implementation examples, see `/docs/security/` and `SECURITY_RECOMMENDATIONS.md`**
 
 ---
 
